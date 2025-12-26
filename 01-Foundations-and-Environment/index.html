@@ -48,7 +48,7 @@
             <!-- Üst Bilgi -->
             <div class="flex justify-between items-center text-gray-500 text-xs md:text-sm mb-2 uppercase tracking-widest font-bold">
                 <span class="flex items-center gap-2"><i data-lucide="layers" class="w-4 h-4"></i> <span id="section-name">Giriş</span></span>
-                <span id="slide-count">1 / 40</span>
+                <span id="slide-count">1 / 50</span>
             </div>
 
             <!-- Başlık -->
@@ -161,6 +161,7 @@
     <script>
         // --- VERİLER (Slides Data) ---
         const slides = [
+            // --- BÖLÜM 1-20 (DEĞİŞMEDİ) ---
             { id: 1, section: "Giriş", title: "Yolculuk Başlıyor: Artırılmış Gerçeklik (AR)", content: "AR (Augmented Reality), gerçek dünyayı dijital verilerle 'boyamak' gibidir. Kamerayı açarsın, masanın üzerinde sanal bir vazo görürsün. Bu, gerçeklik ile sanalın dansıdır.", visualType: "icon", iconName: "box", note: "Gerçek Hayat: Instagram filtreleri yüzünüze köpek kulakları eklediğinde, yüzünüzün 3D haritasını çıkarıp üzerine doku giydiren bir AR teknolojisi kullanır.", color: "bg-blue-600" },
             { id: 2, section: "Giriş", title: "AR Kullanım Alanları", content: "Eğitimden sağlığa, cerrahların ameliyat öncesi sanal pratik yapmasından, mimarların binayı inşa etmeden önce arazide görmesine kadar her yerdedir.", visualType: "list", items: ["Eğitim: İnteraktif Kitaplar", "Sağlık: Damar Yolu Görüntüleme", "Perakende: Sanal Kıyafet Deneme", "Mimari: 3D Bina Önizleme"], note: "Gerçek Hayat: Google Haritalar'ın 'Live View' özelliği, telefon kamerasını sokağa tuttuğunuzda oklarla yolu göstermesi AR'ın en pratik halidir.", color: "bg-blue-500" },
             { id: 3, section: "Giriş", title: "Dil Seçimi: C++ mı Python mı?", content: "AR uygulamaları saniyede 60 kare (60 FPS) görüntü işlemek zorundadır. Gecikme (lag) olursa kullanıcının başı döner.", visualType: "comparison", leftTitle: "C++ (Hız Canavarı)", leftDesc: "Donanıma doğrudan erişir. Çok hızlıdır ama yazması zordur.", rightTitle: "Python (Konfor)", rightDesc: "Yazması çok kolaydır ama C++ kadar 'anlık' tepki veremeyebilir.", note: "Gerçek Hayat: F1 aracı (C++) çok hızlıdır ama sürmesi zordur. Otomatik vitesli bir sedan (Python) konforludur ama pistte yarışamaz.", color: "bg-indigo-600" },
@@ -169,42 +170,169 @@
             { id: 6, section: "Yazılım Temelleri", title: "Çok Paradigmalı Diller", content: "Modern diller tek bir kalıba sığmaz. Python, JS gibi diller hem OOP, hem Fonksiyonel hem de Prosedürel yazılabilir.", visualType: "icon", iconName: "layers", note: "Gerçek Hayat: Akıllı telefonunuz hem bir telefon, hem kamera, hem de bilgisayardır. Tek bir aletle birden fazla ihtiyacı karşılarsınız.", color: "bg-purple-600" },
             { id: 7, section: "Diller", title: "LISP: Yapay Zekanın Atası", content: "Sembolik işlemler için tasarlanmıştır. Parantezlerin efendisidir. Yapay zeka tarihinin en köklü dillerinden biridir.", visualType: "code", codeSnippet: "(defun faktoriyel (n)\n  (if (<= n 1) 1\n    (* n (faktoriyel (- n 1)))))", note: "Gerçek Hayat: LISP, eski zamanların bilge dedesi gibidir. Modern dillerin kullandığı pek çok özellik ilk ondan çıkmıştır.", color: "bg-green-600" },
             { id: 8, section: "Diller", title: "Python: Veri Biliminin Lideri", content: "Yazımı insan diline (İngilizce) çok yakındır. Arkasındaki devasa kütüphane desteği (NumPy, Pandas, AI) onu lider yapmıştır.", visualType: "list", items: ["Kolay sözdizimi (Syntax)", "Zengin Kütüphaneler", "Geniş Topluluk", "Yavaş Çalışma Hızı"], note: "Gerçek Hayat: Python, 'LEGO' gibidir. Karmaşık parçaları (C ile yazılmış kütüphaneler) çok basit bir şekilde birleştirip devasa yapılar kurmanızı sağlar.", color: "bg-green-600" },
-            { id: 9, section: "Donanım", title: "CPU vs GPU", content: "CPU, az sayıda ama güçlü çekirdeğe sahiptir. GPU ise binlerce küçük, aptal ama çalışkan çekirdeğe sahiptir.", visualType: "comparison", leftTitle: "CPU (Merkezi İşlemci)", leftDesc: "Az sayıda (4-16) çok zeki çekirdek. Seri işlem yapar.", rightTitle: "GPU (Grafik İşlemci)", rightDesc: "Binlerce (1000+) basit çekirdek. Paralel işlem yapar.", note: "Gerçek Hayat: CPU bir Profesör gibidir, tek başına zor bir denklemi çözer. GPU ise binlerce İlkokul Öğrencisi gibidir, hepsi aynı anda basit bir boyama işlemini bitirir.", color: "bg-red-600" },
-            { id: 10, section: "Donanım", title: "CUDA Çekirdekleri", content: "NVIDIA'nın teknolojisidir. Ekrana piksel basmak için tasarlanan bu binlerce minik çekirdeği, matematiksel işlem yapmak için kullanırız.", visualType: "cuda_cores", note: "Gerçek Hayat: Bir tarlayı sürmek için 1 dev traktör (CPU) yerine, birbirine bağlı 5000 küçük çapa makinesi (CUDA) kullanmak gibidir.", color: "bg-red-500" },
-            { id: 11, section: "Donanım", title: "GPU Neden Daha Hızlı?", content: "Matris çarpmaları birbirine bağımlı olmayan milyonlarca küçük işlemdir. GPU hepsini tek seferde yapar.", visualType: "concept", concept: "Paralel İşleme (Parallel Computing)", note: "Gerçek Hayat: Bir otoyol gişesi düşünün. CPU tek bir gişedir, araçlar kuyruk olur. GPU ise yan yana 1000 gişedir, hiç bekleme olmaz.", color: "bg-red-500" },
-            { id: 12, section: "Matematik", title: "Vektörler", content: "Birden fazla sayının sıralı halidir. Fizikte hız ve yön belirtir, bilgisayarda veriyi temsil eder.", visualType: "math_vector", note: "Gerçek Hayat: Bir evin özelliklerini vektör yapabiliriz: [Oda Sayısı: 3, Metrekare: 120, Fiyat: 5000].", color: "bg-yellow-500" },
-            { id: 13, section: "Matematik", title: "Matrisler", content: "Satır ve sütunlardan oluşan sayı tablolarıdır. Excel tablosu veya dijital bir fotoğraf aslında bir matristir.", visualType: "math_matrix", note: "Gerçek Hayat: Dijital bir fotoğrafı yakınlaştırdığınızda gördüğünüz o küçük kareler (pikseller), aslında bilgisayar için sadece sayılardır.", color: "bg-yellow-500" },
-            { id: 14, section: "Matematik", title: "Tensörler (3D Veri)", content: "Boyutların ötesi. 3 boyutlu bir küp sayı dizisi bir tensördür. RGB bir resim 3 katmanlı (Kırmızı, Yeşil, Mavi) bir tensördür.", visualType: "math_tensor", note: "Gerçek Hayat: Renkli bir video '4 Boyutlu Bir Tensör'dür: Zaman x Yükseklik x Genişlik x Renk.", color: "bg-yellow-600" },
-            { id: 15, section: "Matematik", title: "Matris Çarpımı", content: "Yapay zekanın kalbidir. Sinir ağları öğrenirken milyarlarca kez bu işlemi yapar.", visualType: "matrix_mult_detail", note: "Gerçek Hayat: Spotify'ın 'Sana Özel' listesi matris çarpımıyla oluşur.", color: "bg-yellow-500" },
-            { id: 16, section: "NumPy", title: "NumPy: Python'un Süper Gücü", content: "Python listeleri yavaştır. NumPy, C dili ile yazılmış, verileri bellekte yan yana tutan hızlı bir kütüphanedir.", visualType: "icon", iconName: "database", note: "Gerçek Hayat: Python listesi dağınık bir kütüphane gibidir. NumPy dizisi ise tüm kitapların tek bir rafta dizildiği bir ansiklopedidir.", color: "bg-cyan-600" },
-            { id: 17, section: "NumPy", title: "Neden NumPy?", content: "Standart Python listesinde her sayı bir 'Nesne'dir. NumPy'da ise sadece saf veri vardır.", visualType: "comparison", leftTitle: "Python List", leftDesc: "Bellekte dağınık, her eleman için ekstra yük.", rightTitle: "NumPy Array", rightDesc: "Bellekte blok halinde, saf sayısal değer.", note: "Gerçek Hayat: Python listesi her yolcu için ayrı taksi tutmak gibidir. NumPy ise herkesi tek bir otobüse bindirmektir.", color: "bg-cyan-700" },
-            { id: 18, section: "NumPy", title: "NumPy ile Dizi Oluşturma", content: "Veri biliminde her şeyi elle yazmayız. Sıfırlardan veya birlerden oluşan matrisleri tek komutla üretiriz.", visualType: "code", codeSnippet: "import numpy as np\n\n# 3x3 Sıfır Matrisi\nsifirlar = np.zeros((3,3))\n\n# Rastgele 5 sayı\nrastgele = np.random.rand(5)", note: "Gerçek Hayat: Bir inşaata başlarken tuğlaları tek tek üretmezsiniz, fabrikadan hazır palet sipariş edersiniz.", color: "bg-cyan-600" },
-            { id: 19, section: "NumPy", title: "Slicing (Dilimleme)", content: "Büyük bir veri setinden sadece istediğimiz kısmı almak için kullanılır. data[0:5] komutu ilk 5 veriyi getirir.", visualType: "visual_slicing", note: "Gerçek Hayat: Bir pastanın sadece çilekli kısmını kesip almak gibidir.", color: "bg-cyan-500" },
-            { id: 20, section: "NumPy", title: "Vektörel İşlemler", content: "Döngü kullanmak yasaktır! İki diziyi toplamak için a + b yazarız. C hızıyla çalışır.", visualType: "code", codeSnippet: "# Python (Yavaş)\nfor i in range(len(a)): ...\n\n# NumPy (Hızlı)\ntoplam = a + b", note: "Gerçek Hayat: 100 öğrencinin notuna +5 puan eklemek için sisteme tek komut vermek gibidir.", color: "bg-cyan-600" },
-            { id: 21, section: "NumPy", title: "Reshape", content: "Verinin şeklini değiştirmek. 12 elemanlı düz bir listeyi, 3 satır 4 sütunlu tabloya dönüştürmek.", visualType: "visual_reshape", note: "Gerçek Hayat: Oyun hamurunu bozmadan, onu uzun bir çubuktan yassı bir kareye dönüştürmek gibidir.", color: "bg-cyan-500" },
-            { id: 22, section: "NumPy", title: "Broadcasting", content: "Farklı boyutlardaki matrislerle işlem yapabilme yeteneğidir. Küçük matris, büyüğe uymak için kopyalanır.", visualType: "illustration", illustrationType: "broadcasting", note: "Gerçek Hayat: Bir yemek tarifini 4 kişilik bir aileye uyarlamak için malzemeleri 4 ile çarpmak gibidir.", color: "bg-cyan-500" },
-            { id: 23, section: "NumPy", title: "Aggregation", content: "Milyonlarca veriyi tek bir sayıya (Ortalama, Max) indirgemek.", visualType: "code", codeSnippet: "ortalama = veriler.mean()\nen_yuksek = veriler.max()", note: "Gerçek Hayat: Bir öğretmenin sınavdan sonra 'Sınıf ortalaması kaç?' diye sormasıdır.", color: "bg-cyan-600" },
-            { id: 24, section: "NumPy & AI", title: "AI Neden NumPy'a Muhtaç?", content: "AI modelleri sadece sayıları görür. NumPy, dünyayı (Resim, Ses) sayılara çeviren tercümandır.", visualType: "concept", concept: "Veri -> [NumPy] -> Matris -> AI", note: "Gerçek Hayat: AI bir matematik profesörüdür ama dilsizdir. NumPy onun kulağı ve gözüdür.", color: "bg-purple-700" },
-            { id: 25, section: "NumPy & AI", title: "Label Encoding", content: "Kategorileri 0, 1, 2 diye numaralandırmaktır. Kırmızı=0, Mavi=1. Ancak makine 1 > 0 sanıp hata yapabilir.", visualType: "label_encoding_visual", note: "Gerçek Hayat: Yarışmacı numarası gibidir. 10 numara, 1 numaradan daha 'büyük' veya 'iyi' değildir.", color: "bg-purple-600" },
-            { id: 26, section: "NumPy & AI", title: "One-Hot Encoding", content: "Her kategoriye özel sütun açarız. Kırmızı mı? Evet(1)/Hayır(0). Sıralama hatasını çözer.", visualType: "onehot_encoding_visual", note: "Gerçek Hayat: Anketlerde tek kutuya sayı yazmak yerine, her seçenek için ayrı kutucuk işaretlemek gibidir.", color: "bg-purple-600" },
-            { id: 27, section: "NumPy & AI", title: "Tuzağı: Ölçek (Scale)", content: "Maaş: 50.000, Yaş: 30. Makine 50.000'i görünce yaşı önemsiz sanır. Biri dev, biri karınca!", visualType: "scaling_trap_visual", note: "Gerçek Hayat: Fil ile karıncayı tahterevalliye bindirmek gibidir. Fil (Büyük Sayı) hep ağır basar, denge bozulur.", color: "bg-pink-600" },
-            { id: 28, section: "NumPy & AI", title: "Çözüm: Scaling (Ölçekleme)", content: "NumPy ile tüm verileri 0-1 arasına sıkıştırırız. Artık adil karşılaştırma yapılabilir.", visualType: "scaling_visual", note: "Gerçek Hayat: Boks maçında sikletleri eşitlemek gibidir. Artık iki veri de aynı ringde, eşit şartlarda dövüşebilir.", color: "bg-pink-500" },
-            { id: 29, section: "NumPy & AI", title: "Train vs Test", content: "Veriyi %80 Eğitim, %20 Test olarak böleriz.", visualType: "visual_slicing", note: "Gerçek Hayat: Derste çözülen sorular (Train) ile sınavda çıkan sorular (Test) farklı olmalıdır.", color: "bg-purple-600" },
-            { id: 30, section: "Ekosistem", title: "PIP", content: "'Pip Installs Packages'. Kütüphaneleri indiren araçtır.", visualType: "terminal", command: "pip install numpy pandas", note: "Gerçek Hayat: Telefonunuzdaki App Store neyse, Python için PIP odur.", color: "bg-orange-600" },
-            { id: 31, section: "Ekosistem", title: "Conda", content: "Sanal ortam yöneticisidir. Projeleri birbirinden izole eder.", visualType: "illustration", illustrationType: "bubbles", note: "Gerçek Hayat: Tatlı yapılan tezgah ile soğan doğranan tezgahı ayırmak gibidir.", color: "bg-orange-500" },
-            { id: 32, section: "Sonuç", title: "Büyük Resim", content: "AR dünyayı görselleştirir, Python mantığı kurar, GPU hızlandırır, NumPy matematiği halleder.", visualType: "icon", iconName: "lightbulb", note: "Bu bir orkestra gibidir. Her enstrüman farklıdır ama birlikte senfoniyi çalarlar.", color: "bg-indigo-700" }
+            { id: 9, section: "Diller", title: "Java: Kurumsal Güç", content: "'Bir kere yaz, her yerde çalıştır.' Platform bağımsızdır. Android uygulamalarının ve büyük banka sistemlerinin bel kemiğidir.", visualType: "icon", iconName: "server", note: "Gerçek Hayat: Bankacılık uygulamaları gibi hata kabul etmeyen dev sistemlerin çimentosudur.", color: "bg-green-600" },
+            { id: 10, section: "Diller", title: "R: Veri Analizinin Dili", content: "İstatistikçiler tarafından, istatistikçiler için yapılmıştır. Veri analizi ve görselleştirmede çok güçlüdür.", visualType: "icon", iconName: "bar-chart", note: "Gerçek Hayat: Bilimsel araştırmalarda kullanılan karmaşık grafikleri çizmek için en iyi ressamdır.", color: "bg-green-500" },
+            { id: 11, section: "Diller", title: "Julia: Hız ve Kolaylık", content: "Python kadar kolay, C++ kadar hızlı olmayı hedefler. Geleceğin bilimsel hesaplama dili olarak görülür.", visualType: "icon", iconName: "zap", note: "Gerçek Hayat: Hem yarış arabası hızı hem de bisiklet kullanım kolaylığı sunan hibrit bir araç gibidir.", color: "bg-green-500" },
+            { id: 12, section: "Donanım", title: "CPU vs GPU", content: "CPU, az sayıda ama güçlü çekirdeğe sahiptir. GPU ise binlerce küçük, aptal ama çalışkan çekirdeğe sahiptir.", visualType: "comparison", leftTitle: "CPU (Merkezi İşlemci)", leftDesc: "Az sayıda (4-16) çok zeki çekirdek. Seri işlem yapar.", rightTitle: "GPU (Grafik İşlemci)", rightDesc: "Binlerce (1000+) basit çekirdek. Paralel işlem yapar.", note: "Gerçek Hayat: CPU bir Profesör gibidir, tek başına zor bir denklemi çözer. GPU ise binlerce İlkokul Öğrencisi gibidir, hepsi aynı anda basit bir boyama işlemini bitirir.", color: "bg-red-600" },
+            { id: 13, section: "Donanım", title: "CUDA Çekirdekleri", content: "NVIDIA'nın teknolojisidir. Ekrana piksel basmak için tasarlanan bu binlerce minik çekirdeği, matematiksel işlem yapmak için kullanırız.", visualType: "cuda_cores", note: "Gerçek Hayat: Bir tarlayı sürmek için 1 dev traktör (CPU) yerine, birbirine bağlı 5000 küçük çapa makinesi (CUDA) kullanmak gibidir.", color: "bg-red-500" },
+            { id: 14, section: "Donanım", title: "GPU Neden Daha Hızlı?", content: "Matris çarpmaları birbirine bağımlı olmayan milyonlarca küçük işlemdir. GPU hepsini tek seferde yapar.", visualType: "concept", concept: "Paralel İşleme (Parallel Computing)", note: "Gerçek Hayat: Bir otoyol gişesi düşünün. CPU tek bir gişedir, araçlar kuyruk olur. GPU ise yan yana 1000 gişedir, hiç bekleme olmaz.", color: "bg-red-500" },
+            { id: 15, section: "Matematik", title: "Vektörler", content: "Birden fazla sayının sıralı halidir. Fizikte hız ve yön belirtir, bilgisayarda veriyi temsil eder.", visualType: "math_vector", note: "Gerçek Hayat: Bir evin özelliklerini vektör yapabiliriz: [Oda Sayısı: 3, Metrekare: 120, Fiyat: 5000].", color: "bg-yellow-500" },
+            { id: 16, section: "Matematik", title: "Matrisler", content: "Satır ve sütunlardan oluşan sayı tablolarıdır. Excel tablosu veya dijital bir fotoğraf aslında bir matristir.", visualType: "math_matrix", note: "Gerçek Hayat: Dijital bir fotoğrafı yakınlaştırdığınızda gördüğünüz o küçük kareler (pikseller), aslında bilgisayar için sadece sayılardır.", color: "bg-yellow-500" },
+            { id: 17, section: "Matematik & Görüntü", title: "Görüntü = Sayı (Piksel Mantığı)", content: "Bilgisayarlar resimleri göremez, sadece sayıları okur. Bir resimdeki her nokta (piksel), parlaklığına göre 0 (Siyah) ile 255 (Beyaz) arasında bir sayı alır.", visualType: "pixel_grid", note: "Gerçek Hayat: Kanaviçe işlemek gibidir. Uzaktan bakınca resim görürsünüz ama yakından bakınca sadece renkli çarpı işaretleri (sayılar) vardır.", color: "bg-yellow-600" },
+            { id: 18, section: "Matematik & Görüntü", title: "Renkli Dünyalar (RGB)", content: "Renkli bir resim tek katman değildir. 3 Boyutludur! Kırmızı (R), Yeşil (G) ve Mavi (B) katmanları üst üste binerek renkleri oluşturur.", visualType: "math_tensor", note: "Gerçek Hayat: Bir sandviç gibidir. Ekmek, peynir ve marul üst üste gelince sandviç olur. RGB katmanları üst üste gelince renkli resim olur.", color: "bg-yellow-600" },
+            { id: 19, section: "Matematik", title: "Tensörler (Genel Bakış)", content: "Boyutların ötesi. Sadece resim değil, ses ve video da tensördür. Video: Zaman x RGB x Boyut yapısında 4 boyutlu bir tensördür.", visualType: "concept", concept: "Verinin Çok Boyutlu Hali", note: "Gerçek Hayat: Matruşka bebekleri gibi iç içe geçmiş veri kutularıdır.", color: "bg-yellow-600" },
+            { id: 20, section: "Matematik", title: "Matris Çarpımı", content: "Yapay zekanın kalbidir. Sinir ağları öğrenirken milyarlarca kez bu işlemi yapar.", visualType: "matrix_mult_detail", note: "Gerçek Hayat: Spotify'ın 'Sana Özel' listesi matris çarpımıyla oluşur.", color: "bg-yellow-500" },
+
+            // --- BÖLÜM: NUMPY ve AI DERİNLEŞTİRİLMİŞ (YENİ VE REVİZE) ---
+            
+            // 21. NumPy vs List (Neden İhtiyaç Var?)
+            { 
+                id: 21, 
+                section: "NumPy & AI Temelleri", 
+                title: "Python Listesi vs NumPy: Hız ve Düzen", 
+                content: "Standart Python listeleri dağınıktır (Pointer yapısı). NumPy ise veriyi bellekte bitişik (contiguous) bloklar halinde tutar. Bu yüzden AI için gerekli olan milyonlarca işlemi çok daha hızlı yapar.", 
+                visualType: "numpy_vs_list", 
+                note: "Analoji: Python listesi, kitapların evin farklı odalarında olduğu dağınık bir kütüphanedir. NumPy ise tüm kitapların tek bir rafta, sırayla dizildiği, elini uzatıp hepsini alabileceğin bir raftır.", 
+                color: "bg-cyan-700" 
+            },
+
+            // 22. AI Veriyi Nasıl Görür?
+            { 
+                id: 22, 
+                section: "NumPy & AI Temelleri", 
+                title: "Yapay Zeka Dünyayı Nasıl Görür?", 
+                content: "Yapay zeka modelleri sadece matematiksel işlemleri yapabilir. Gözleri, kulakları yoktur. Bir resmi, bir sesi veya bir metni NumPy dizisine (sayısal veriye) çevirmek zorundayız.", 
+                visualType: "concept", 
+                concept: "Gerçek Hayat Verisi ➡️ NumPy Dizisi", 
+                note: "Analoji: Yapay zeka dilsiz bir matematik dehasıdır. NumPy, dünyadaki görüntüleri ve sesleri onun anlayacağı 'Sayıca' diline çeviren tercümandır.", 
+                color: "bg-cyan-600" 
+            },
+
+            // 23. Boyutlar: Vektör (1D)
+            { 
+                id: 23, 
+                section: "Boyutlar Dünyası", 
+                title: "Boyut 1: Vektör (Özellikler)", 
+                content: "Tek boyutlu NumPy dizisidir. Bir kişinin özelliklerini (Yaş, Boy, Kilo) veya bir ses dalgasının zaman içindeki değişimini tutar.", 
+                visualType: "dimensions_visual", 
+                dimType: "1D", 
+                codeSnippet: "np.array([25, 180, 75])", 
+                note: "AI Bağlamı: Bir evi tarif eden özellikler listesi (Oda sayısı, Metrekare, Fiyat) bir vektördür. Model bu vektörü alıp 'Pahalı mı?' diye karar verir.", 
+                color: "bg-yellow-500" 
+            },
+
+            // 24. Boyutlar: Matris (2D)
+            { 
+                id: 24, 
+                section: "Boyutlar Dünyası", 
+                title: "Boyut 2: Matris (Resimler)", 
+                content: "İki boyutlu (Satır x Sütun) NumPy dizisidir. Siyah-beyaz resimler, Excel tabloları bu formattadır.", 
+                visualType: "dimensions_visual", 
+                dimType: "2D", 
+                codeSnippet: "np.array([[0, 255], [255, 0]])", 
+                note: "AI Bağlamı: 28x28 piksellik bir el yazısı rakam (MNIST verisi), bilgisayar için 28 satır ve 28 sütunluk bir sayı ızgarasıdır.", 
+                color: "bg-yellow-500" 
+            },
+
+            // 25. Boyutlar: Tensör (3D)
+            { 
+                id: 25, 
+                section: "Boyutlar Dünyası", 
+                title: "Boyut 3: Tensör (Renkli Dünya)", 
+                content: "Üç veya daha fazla boyutlu dizilerdir. Renkli bir resim (Yükseklik x Genişlik x 3 Renk Kanalı) bir 3D tensördür. Bir video ise 4D tensördür (+Zaman).", 
+                visualType: "dimensions_visual", 
+                dimType: "3D", 
+                codeSnippet: "np.zeros((1080, 1920, 3))", 
+                note: "AI Bağlamı: Derin Öğrenme (Deep Learning) modelleri tensörlerle beslenir. TensorFlow kütüphanesinin adı buradan gelir: 'Tensörlerin Akışı'.", 
+                color: "bg-yellow-600" 
+            },
+
+            // 26. AI Giriş Katmanı: Reshape/Flatten
+            { 
+                id: 26, 
+                section: "AI İşlemleri", 
+                title: "Modelin Kapısı: Reshape (Düzleştirme)", 
+                content: "Çoğu basit yapay sinir ağı, kare (2D) bir resmi doğrudan alamaz. Onu tek sıra halinde uzun bir çubuğa (1D Vektör) dönüştürmemiz gerekir. Buna 'Flatten' denir.", 
+                visualType: "reshape_visual", 
+                note: "Analoji: Bir yapbozu kutusuna koymak için parçalamadan, tüm parçaları tek bir ip üzerine dizmek gibidir. Veri kaybolmaz, sadece şekli değişir.", 
+                color: "bg-purple-600" 
+            },
+
+            // 27. İşlem Gücü: Vectorization
+            { 
+                id: 27, 
+                section: "AI İşlemleri", 
+                title: "Vektörizasyon: Döngüsüz Hız", 
+                content: "Yapay zekada milyonlarca veriyi tek tek işleyemezsiniz (For döngüsü çok yavaştır). NumPy ile 'Tüm listeyi 2 ile çarp' dersiniz ve o bunu aynı anda yapar.", 
+                visualType: "code", 
+                codeSnippet: "# YAVAŞ (Python Döngüsü)\nfor i in range(1000000): x[i] * 2\n\n# HIZLI (NumPy Vectorization)\nx * 2", 
+                note: "Analoji: Bir komutanın (NumPy) 1000 askere (Veri) tek bir 'İleri Marş' emri vermesi gibidir. Tek tek her askere gidip söylemez.", 
+                color: "bg-purple-500" 
+            },
+
+            // 28. Temel İşlem: Dot Product
+            { 
+                id: 28, 
+                section: "AI İşlemleri", 
+                title: "AI'nın Kalbi: Dot Product (Çarpım)", 
+                content: "Bir nöronun ateşlenip ateşlenmeyeceğine karar veren işlemdir. Girdiler (Inputs) ile Ağırlıklar (Weights) çarpılır ve toplanır. NumPy bunu `np.dot(x, w)` ile yapar.", 
+                visualType: "dot_product_visual", 
+                note: "Analoji: Bir karar verirken kriterlere (Girdi) önem puanı (Ağırlık) vermek gibidir. 'Hava güzel mi?' (Girdi: Evet) x 'Hava durumu benim için ne kadar önemli?' (Ağırlık: 0.8).", 
+                color: "bg-purple-600" 
+            },
+
+            // 29. Broadcasting: Bias Ekleme
+            { 
+                id: 29, 
+                section: "AI İşlemleri", 
+                title: "Broadcasting: Bias Ekleme", 
+                content: "Modelin sonucunu kaydırmak için bir 'Bias' (Yanlılık) değeri eklenir. NumPy, tek bir sayıyı tüm matrise otomatik olarak yayarak (broadcast) ekler.", 
+                visualType: "illustration", 
+                illustrationType: "broadcasting", 
+                note: "Analoji: Sınıftaki herkesin notuna +5 puan eklemek gibidir. +5 tek bir sayıdır ama herkese (tüm matrise) etki eder.", 
+                color: "bg-purple-500" 
+            },
+
+            // 30. Filtreleme: Aktivasyon (ReLU)
+            { 
+                id: 30, 
+                section: "AI İşlemleri", 
+                title: "Filtreleme: ReLU Mantığı", 
+                content: "Yapay zeka negatif sonuçları sevmez. 'Negatifleri sıfır yap, pozitifler kalsın' deriz. NumPy ile `x[x < 0] = 0` veya `np.maximum(0, x)` diyerek bunu yaparız.", 
+                visualType: "visual_slicing", // Mevcut görseli yeniden kullanıyoruz, içeriği farklı yorumlanacak
+                note: "Analoji: Bir baraj kapağı gibidir. Su seviyesi (değer) belli bir seviyenin altındaysa kapak kapalıdır (0), üstündeyse olduğu gibi akar.", 
+                color: "bg-purple-600" 
+            },
+
+            // 31. Scaling: 0-1 Arası
+            { 
+                id: 31, 
+                section: "Veri Hazırlığı", 
+                title: "Scaling (Ölçekleme): 0 ile 1 Arası", 
+                content: "Farklı birimdeki verileri (Maaş: 50.000, Yaş: 30) kıyaslamak zordur. NumPy ile hepsini 0 ile 1 arasına sıkıştırırız. Model daha hızlı ve doğru öğrenir.", 
+                visualType: "scaling_visual", 
+                note: "Analoji: Farklı para birimlerini (Dolar, Euro, TL) tek bir ortak birime çevirmek gibidir. Böylece kimin daha zengin olduğunu (hangi özelliğin önemli olduğunu) adilce anlarız.", 
+                color: "bg-pink-500" 
+            },
+
+            // --- BÖLÜM: GERİ KALANLAR (KAYDIRILDI) ---
+            { id: 32, section: "NumPy & AI", title: "Label Encoding", content: "Kategorileri 0, 1, 2 diye numaralandırmaktır. Kırmızı=0, Mavi=1. Ancak makine 1 > 0 sanıp hata yapabilir.", visualType: "label_encoding_visual", note: "Gerçek Hayat: Yarışmacı numarası gibidir. 10 numara, 1 numaradan daha 'büyük' veya 'iyi' değildir.", color: "bg-purple-600" },
+            { id: 33, section: "NumPy & AI", title: "One-Hot Encoding", content: "Her kategoriye özel sütun açarız. Kırmızı mı? Evet(1)/Hayır(0). Sıralama hatasını çözer.", visualType: "onehot_encoding_visual", note: "Gerçek Hayat: Anketlerde tek kutuya sayı yazmak yerine, her seçenek için ayrı kutucuk işaretlemek gibidir.", color: "bg-purple-600" },
+            { id: 34, section: "NumPy & AI", title: "Train vs Test", content: "Veriyi %80 Eğitim, %20 Test olarak böleriz.", visualType: "visual_slicing", note: "Gerçek Hayat: Derste çözülen sorular (Train) ile sınavda çıkan sorular (Test) farklı olmalıdır.", color: "bg-purple-600" },
+            { id: 35, section: "Ekosistem", title: "PIP", content: "'Pip Installs Packages'. Kütüphaneleri indiren araçtır.", visualType: "terminal", command: "pip install numpy pandas", note: "Gerçek Hayat: Telefonunuzdaki App Store neyse, Python için PIP odur.", color: "bg-orange-600" },
+            { id: 36, section: "Ekosistem", title: "Conda", content: "Sanal ortam yöneticisidir. Projeleri birbirinden izole eder.", visualType: "illustration", illustrationType: "bubbles", note: "Gerçek Hayat: Tatlı yapılan tezgah ile soğan doğranan tezgahı ayırmak gibidir.", color: "bg-orange-500" },
+            { id: 37, section: "Sonuç", title: "Büyük Resim", content: "AR dünyayı görselleştirir, Python mantığı kurar, GPU hızlandırır, NumPy matematiği halleder.", visualType: "icon", iconName: "lightbulb", note: "Bu bir orkestra gibidir. Her enstrüman farklıdır ama birlikte senfoniyi çalarlar.", color: "bg-indigo-700" }
         ];
 
         // --- GLOBAL VARIABLES ---
         let currentSlideIndex = 0;
-        const apiKey = ""; // API KEY BURAYA GELECEK (Eğer varsa)
+        const apiKey = ""; 
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             renderSlide(0);
             
-            // Klavye Kontrolü
             document.addEventListener('keydown', (e) => {
                 if(e.key === 'ArrowRight') nextSlide();
                 if(e.key === 'ArrowLeft') prevSlide();
@@ -216,7 +344,6 @@
             const slide = slides[index];
             currentSlideIndex = index;
 
-            // Text Updates
             document.getElementById('section-name').innerText = slide.section;
             document.getElementById('slide-count').innerText = `${slide.id} / ${slides.length}`;
             document.getElementById('slide-title').innerText = slide.title;
@@ -224,26 +351,20 @@
             document.getElementById('slide-note').innerText = slide.note;
             document.getElementById('ai-context-title').innerText = slide.title;
 
-            // Style Updates
             const strip = document.getElementById('header-strip');
-            const colorClass = slide.color.replace('bg-', ''); // 'blue-600' gibi
             strip.className = `h-2 w-full transition-colors duration-500 shadow-[0_0_15px_rgba(255,255,255,0.2)] ${slide.color}`;
             
-            // Background Glow Updates
             document.getElementById('bg-glow-1').className = `absolute top-0 right-0 p-64 ${slide.color} opacity-10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none transition-colors duration-1000`;
             document.getElementById('bg-glow-2').className = `absolute bottom-0 left-0 p-64 ${slide.color} opacity-5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2 pointer-events-none transition-colors duration-1000`;
 
-            // Progress Bar
             const percentage = ((index + 1) / slides.length) * 100;
             const progressBar = document.getElementById('progress-bar');
             progressBar.style.width = `${percentage}%`;
             progressBar.className = `h-full transition-all duration-500 ease-out ${slide.color}`;
 
-            // Buttons State
             document.getElementById('btn-prev').disabled = index === 0;
             document.getElementById('btn-next').disabled = index === slides.length - 1;
 
-            // Visual Component Render
             renderVisual(slide);
         }
 
@@ -251,16 +372,13 @@
             const container = document.getElementById('visual-container');
             let htmlContent = '';
 
-            // ICON TYPE
             if (slide.visualType === 'icon') {
                 htmlContent = `<div class="flex justify-center items-center h-full animate-pulse"><i data-lucide="${slide.iconName}" class="w-32 h-32 text-white opacity-80"></i></div>`;
             }
-            // LIST TYPE
             else if (slide.visualType === 'list') {
                 const listItems = slide.items.map(item => `<li class="flex items-center text-lg bg-white/10 p-3 rounded-lg"><div class="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></div>${item}</li>`).join('');
                 htmlContent = `<ul class="space-y-3 mt-4 w-full">${listItems}</ul>`;
             }
-            // COMPARISON TYPE
             else if (slide.visualType === 'comparison') {
                 htmlContent = `
                     <div class="grid grid-cols-2 gap-4 mt-4 h-full w-full">
@@ -274,7 +392,6 @@
                         </div>
                     </div>`;
             }
-            // CODE TYPE
             else if (slide.visualType === 'code') {
                 htmlContent = `
                     <div class="bg-gray-950 p-4 rounded-xl font-mono text-sm border-l-4 border-green-500 shadow-2xl w-full overflow-x-auto">
@@ -284,7 +401,6 @@
                         <pre class="text-green-300 whitespace-pre-wrap">${slide.codeSnippet}</pre>
                     </div>`;
             }
-            // TERMINAL TYPE
             else if (slide.visualType === 'terminal') {
                 htmlContent = `
                     <div class="bg-black p-4 rounded-xl font-mono text-sm border border-gray-700 shadow-2xl w-full">
@@ -293,11 +409,9 @@
                         <div class="text-green-400 mt-1">Successfully installed.</div>
                     </div>`;
             }
-            // CONCEPT TYPE
             else if (slide.visualType === 'concept') {
                 htmlContent = `<div class="flex justify-center items-center h-48 bg-white/5 rounded-lg border border-dashed border-gray-500 w-full"><p class="text-gray-400 text-center px-4 font-bold text-xl">${slide.concept}</p></div>`;
             }
-            // CUDA CORES
             else if (slide.visualType === 'cuda_cores') {
                 let cores = '';
                 for(let i=0; i<96; i++) cores += `<div class="w-1.5 h-1.5 bg-green-500 rounded-sm animate-pulse" style="animation-delay: ${i*10}ms"></div>`;
@@ -309,7 +423,6 @@
                         </div>
                     </div>`;
             }
-            // MATH & VISUALS (Simplified for HTML String)
             else if (slide.visualType === 'math_vector') {
                 htmlContent = `
                     <div class="flex flex-col items-center justify-center h-full space-y-4">
@@ -335,7 +448,6 @@
                         <span class="mt-4 text-lg text-blue-400 font-semibold">2D Matrix</span>
                     </div>`;
             }
-            // TENSOR (3D RGB)
             else if (slide.visualType === 'math_tensor') {
                 htmlContent = `
                     <div class="flex flex-col items-center justify-center h-full perspective-1000">
@@ -349,7 +461,149 @@
                         </div>
                     </div>`;
             }
-            // ONE-HOT ENCODING
+            else if (slide.visualType === 'pixel_grid') {
+                let pixels = '';
+                const values = [
+                    [10, 20, 30, 40, 50],
+                    [60, 150, 200, 150, 60],
+                    [70, 200, 255, 200, 70],
+                    [60, 150, 200, 150, 60],
+                    [10, 20, 30, 40, 50]
+                ];
+                for(let r=0; r<5; r++) {
+                    for(let c=0; c<5; c++) {
+                        const val = values[r][c];
+                        const color = `rgb(${val}, ${val}, ${val})`;
+                        const textColor = val > 128 ? 'black' : 'white';
+                        pixels += `<div class="w-10 h-10 flex items-center justify-center text-[10px] font-mono border border-gray-700" style="background-color: ${color}; color: ${textColor}">${val}</div>`;
+                    }
+                }
+                htmlContent = `
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <div class="grid grid-cols-5 gap-0 border-2 border-white mb-2">
+                            ${pixels}
+                        </div>
+                        <div class="text-xs text-gray-400 mt-2">0 (Siyah) - 255 (Beyaz) arası değerler</div>
+                    </div>`;
+            }
+            // NEW VISUAL: NUMPY vs LIST
+            else if (slide.visualType === 'numpy_vs_list') {
+                htmlContent = `
+                    <div class="flex flex-col gap-6 justify-center h-full w-full">
+                        <!-- Python List -->
+                        <div class="flex items-center gap-4 opacity-50">
+                            <div class="text-xs w-16 text-right">Python List</div>
+                            <div class="flex gap-4">
+                                <div class="w-10 h-10 border border-gray-500 border-dashed rounded flex items-center justify-center text-xs">Obj</div>
+                                <div class="w-4"></div>
+                                <div class="w-10 h-10 border border-gray-500 border-dashed rounded flex items-center justify-center text-xs">Obj</div>
+                                <div class="w-4"></div>
+                                <div class="w-10 h-10 border border-gray-500 border-dashed rounded flex items-center justify-center text-xs">Obj</div>
+                            </div>
+                            <div class="text-xs text-red-400">(Dağınık Bellek)</div>
+                        </div>
+                        <!-- NumPy Array -->
+                        <div class="flex items-center gap-4">
+                            <div class="text-xs w-16 text-right font-bold text-cyan-400">NumPy</div>
+                            <div class="flex border-2 border-cyan-500 rounded overflow-hidden shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                                <div class="w-10 h-10 bg-cyan-900/50 flex items-center justify-center text-xs border-r border-cyan-700">1</div>
+                                <div class="w-10 h-10 bg-cyan-900/50 flex items-center justify-center text-xs border-r border-cyan-700">2</div>
+                                <div class="w-10 h-10 bg-cyan-900/50 flex items-center justify-center text-xs border-r border-cyan-700">3</div>
+                                <div class="w-10 h-10 bg-cyan-900/50 flex items-center justify-center text-xs border-r border-cyan-700">4</div>
+                                <div class="w-10 h-10 bg-cyan-900/50 flex items-center justify-center text-xs">5</div>
+                            </div>
+                            <div class="text-xs text-green-400 font-bold">(Bitişik & Hızlı)</div>
+                        </div>
+                    </div>`;
+            }
+            // NEW VISUAL: DIMENSIONS (1D, 2D, 3D)
+            else if (slide.visualType === 'dimensions_visual') {
+                let visualContent = '';
+                if(slide.dimType === '1D') {
+                    visualContent = `
+                        <div class="flex gap-1 bg-gray-800 p-2 rounded-lg border border-yellow-500">
+                            <div class="w-12 h-12 bg-yellow-500 text-black font-bold flex items-center justify-center rounded">25</div>
+                            <div class="w-12 h-12 bg-yellow-500 text-black font-bold flex items-center justify-center rounded">180</div>
+                            <div class="w-12 h-12 bg-yellow-500 text-black font-bold flex items-center justify-center rounded">75</div>
+                        </div>
+                        <div class="mt-4 text-center text-sm font-mono text-yellow-300">shape: (3,)</div>`;
+                } else if(slide.dimType === '2D') {
+                    visualContent = `
+                        <div class="grid grid-cols-2 gap-1 bg-gray-800 p-2 rounded-lg border border-blue-500">
+                            <div class="w-12 h-12 bg-black border border-gray-600 flex items-center justify-center text-xs text-white">0</div>
+                            <div class="w-12 h-12 bg-white flex items-center justify-center text-xs text-black font-bold">255</div>
+                            <div class="w-12 h-12 bg-white flex items-center justify-center text-xs text-black font-bold">255</div>
+                            <div class="w-12 h-12 bg-black border border-gray-600 flex items-center justify-center text-xs text-white">0</div>
+                        </div>
+                        <div class="mt-4 text-center text-sm font-mono text-blue-300">shape: (2, 2)</div>`;
+                } else { // 3D
+                    visualContent = `
+                        <div class="relative w-32 h-32 perspective-1000">
+                            <div class="absolute w-24 h-24 bg-red-500/80 border border-white top-0 left-0 z-10 flex items-center justify-center font-bold text-2xl">R</div>
+                            <div class="absolute w-24 h-24 bg-green-500/80 border border-white top-4 left-4 z-20 flex items-center justify-center font-bold text-2xl">G</div>
+                            <div class="absolute w-24 h-24 bg-blue-500/80 border border-white top-8 left-8 z-30 flex items-center justify-center font-bold text-2xl">B</div>
+                        </div>
+                        <div class="mt-8 text-center text-sm font-mono text-purple-300">shape: (H, W, 3)</div>`;
+                }
+                
+                htmlContent = `
+                    <div class="flex flex-col items-center justify-center h-full">
+                        ${visualContent}
+                        <div class="mt-6 bg-gray-900 p-3 rounded font-mono text-xs text-green-300 border border-gray-700 w-full text-center">
+                            ${slide.codeSnippet}
+                        </div>
+                    </div>`;
+            }
+            // NEW VISUAL: RESHAPE (Flatten)
+            else if (slide.visualType === 'reshape_visual') {
+                htmlContent = `
+                    <div class="flex flex-col items-center justify-center h-full w-full">
+                        <!-- 2D Image -->
+                        <div class="grid grid-cols-2 gap-1 mb-4">
+                            <div class="w-10 h-10 bg-gray-700 flex items-center justify-center">1</div>
+                            <div class="w-10 h-10 bg-gray-700 flex items-center justify-center">2</div>
+                            <div class="w-10 h-10 bg-gray-700 flex items-center justify-center">3</div>
+                            <div class="w-10 h-10 bg-gray-700 flex items-center justify-center">4</div>
+                        </div>
+                        <div class="text-2xl text-purple-400 font-bold mb-4 animate-bounce">⬇ Flatten ⬇</div>
+                        <!-- 1D Vector -->
+                        <div class="flex gap-1">
+                            <div class="w-10 h-10 bg-purple-600 flex items-center justify-center rounded">1</div>
+                            <div class="w-10 h-10 bg-purple-600 flex items-center justify-center rounded">2</div>
+                            <div class="w-10 h-10 bg-purple-600 flex items-center justify-center rounded">3</div>
+                            <div class="w-10 h-10 bg-purple-600 flex items-center justify-center rounded">4</div>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-400">(2,2) ➡️ (4,)</div>
+                    </div>`;
+            }
+            // NEW VISUAL: DOT PRODUCT
+            else if (slide.visualType === 'dot_product_visual') {
+                htmlContent = `
+                    <div class="flex flex-col items-center justify-center h-full w-full">
+                        <div class="flex gap-8 items-center mb-6">
+                            <div class="text-center">
+                                <div class="bg-blue-900/50 border border-blue-500 px-3 py-1 rounded mb-1 text-xs">Inputs (X)</div>
+                                <div class="flex flex-col gap-1">
+                                    <div class="w-8 h-8 bg-blue-600 flex items-center justify-center text-sm">2</div>
+                                    <div class="w-8 h-8 bg-blue-600 flex items-center justify-center text-sm">3</div>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold">×</div>
+                            <div class="text-center">
+                                <div class="bg-yellow-900/50 border border-yellow-500 px-3 py-1 rounded mb-1 text-xs">Weights (W)</div>
+                                <div class="flex flex-col gap-1">
+                                    <div class="w-8 h-8 bg-yellow-600 flex items-center justify-center text-sm">0.5</div>
+                                    <div class="w-8 h-8 bg-yellow-600 flex items-center justify-center text-sm">2.0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center bg-gray-800 p-4 rounded-xl border border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                            <div class="text-xs text-gray-400 mb-2">(2 * 0.5) + (3 * 2.0)</div>
+                            <div class="text-3xl font-bold text-green-400">7.0</div>
+                            <div class="text-xs text-green-600 font-bold mt-1">Output</div>
+                        </div>
+                    </div>`;
+            }
             else if (slide.visualType === 'onehot_encoding_visual') {
                 htmlContent = `
                     <div class="flex flex-col items-center justify-center h-full space-y-6">
@@ -383,7 +637,6 @@
                         </div>
                     </div>`;
             }
-            // LABEL ENCODING
             else if (slide.visualType === 'label_encoding_visual') {
                 htmlContent = `
                     <div class="flex flex-col items-center justify-center h-full space-y-4">
@@ -397,17 +650,14 @@
                         </div>
                     </div>`;
             }
-            // SCALING TRAP (Slide 27)
             else if (slide.visualType === 'scaling_trap_visual') {
                 htmlContent = `
                     <div class="flex flex-col items-center justify-center h-full w-full px-4">
                         <div class="flex items-end justify-center space-x-8 h-48 w-full border-b-2 border-gray-600 pb-1">
-                            <!-- Maaş Barı -->
                             <div class="flex flex-col items-center group w-1/3">
                                 <span class="text-pink-400 font-bold mb-1">50.000</span>
                                 <div class="w-full bg-pink-500 rounded-t-lg h-40 shadow-[0_0_20px_rgba(236,72,153,0.5)] flex items-center justify-center text-white font-bold text-xs rotate-0">MAAŞ</div>
                             </div>
-                            <!-- Yaş Barı -->
                             <div class="flex flex-col items-center group w-1/3">
                                 <span class="text-blue-300 text-xs mb-1">30</span>
                                 <div class="w-full bg-blue-500 rounded-t-lg h-1 shadow-[0_0_5px_rgba(59,130,246,0.5)]"></div>
@@ -419,18 +669,15 @@
                         </div>
                     </div>`;
             }
-            // SCALING SOLUTION (Slide 28)
             else if (slide.visualType === 'scaling_visual') {
                 htmlContent = `
                     <div class="flex flex-col items-center justify-center h-full w-full px-4">
                         <div class="text-center text-green-400 text-xl font-bold mb-4 animate-bounce">⬇ 0 ile 1 Arasına Sıkıştırma ⬇</div>
                         <div class="flex items-end justify-center space-x-8 h-40 w-full border-b-2 border-gray-600 pb-1">
-                            <!-- Maaş Barı -->
                             <div class="flex flex-col items-center w-1/3 transition-all duration-1000">
                                 <span class="text-pink-400 font-bold mb-1">0.8</span>
                                 <div class="w-full bg-pink-500 rounded-t-lg h-32 shadow-[0_0_15px_rgba(236,72,153,0.5)] flex items-end justify-center pb-2 text-white text-xs">Maaş</div>
                             </div>
-                            <!-- Yaş Barı -->
                             <div class="flex flex-col items-center w-1/3 transition-all duration-1000">
                                 <span class="text-blue-400 font-bold mb-1">0.5</span>
                                 <div class="w-full bg-blue-500 rounded-t-lg h-20 shadow-[0_0_15px_rgba(59,130,246,0.5)] flex items-end justify-center pb-2 text-white text-xs">Yaş</div>
@@ -441,7 +688,116 @@
                         </div>
                     </div>`;
             }
-            // DEFAULT
+            else if (slide.visualType === 'illustration' && slide.illustrationType === 'broadcasting') {
+                htmlContent = `
+                    <div class="flex flex-col items-center justify-center h-full">
+                       <div class="flex items-center space-x-4">
+                          <div class="grid grid-cols-2 gap-1 bg-gray-800 p-2 rounded border border-gray-600">
+                             <div class="w-10 h-10 bg-gray-700 flex items-center justify-center">10</div>
+                             <div class="w-10 h-10 bg-gray-700 flex items-center justify-center">10</div>
+                             <div class="w-10 h-10 bg-gray-700 flex items-center justify-center">10</div>
+                             <div class="w-10 h-10 bg-gray-700 flex items-center justify-center">10</div>
+                          </div>
+                          <div class="text-xl">+</div>
+                          <div class="w-10 h-10 bg-cyan-600 flex items-center justify-center rounded font-bold text-white shadow-lg shadow-cyan-500/50">5</div>
+                       </div>
+                       <div class="mt-2 text-sm text-gray-400">NumPy '5' sayısını tüm kutulara dağıtır</div>
+                    </div>`;
+            }
+            else if (slide.visualType === 'illustration' && slide.illustrationType === 'bubbles') {
+                htmlContent = `
+                    <div class="flex justify-center space-x-8 items-center h-48">
+                        <div class="w-24 h-24 rounded-full border-4 border-blue-400 flex flex-col items-center justify-center text-center p-2 bg-blue-400/10 shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+                            <span class="font-bold text-blue-200 text-xs">Proje A</span>
+                            <span class="text-[10px] text-gray-400">Pandas 1.0</span>
+                        </div>
+                        <div class="w-1 h-24 bg-gray-700"></div>
+                        <div class="w-24 h-24 rounded-full border-4 border-green-400 flex flex-col items-center justify-center text-center p-2 bg-green-400/10 shadow-[0_0_20px_rgba(74,222,128,0.3)]">
+                            <span class="font-bold text-green-200 text-xs">Proje B</span>
+                            <span class="text-[10px] text-gray-400">Pandas 2.0</span>
+                        </div>
+                    </div>`;
+            }
+            else if (slide.visualType === 'visual_slicing') {
+                htmlContent = `
+                    <div class="flex flex-col items-center justify-center h-full space-y-4">
+                        <div class="flex space-x-1 bg-gray-800 p-2 rounded border border-gray-600">
+                           <div class="w-8 h-8 flex items-center justify-center font-bold text-sm bg-cyan-500 text-white scale-110 shadow-lg shadow-cyan-500/50 rounded">10</div>
+                           <div class="w-8 h-8 flex items-center justify-center font-bold text-sm bg-cyan-500 text-white scale-110 shadow-lg shadow-cyan-500/50 rounded">20</div>
+                           <div class="w-8 h-8 flex items-center justify-center font-bold text-sm bg-cyan-500 text-white scale-110 shadow-lg shadow-cyan-500/50 rounded">30</div>
+                           <div class="w-8 h-8 flex items-center justify-center font-bold text-sm bg-gray-700 text-gray-500 opacity-50 rounded">40</div>
+                           <div class="w-8 h-8 flex items-center justify-center font-bold text-sm bg-gray-700 text-gray-500 opacity-50 rounded">50</div>
+                        </div>
+                        <div class="text-cyan-400 font-mono text-lg">data[0:3]</div>
+                        <div class="text-gray-400 text-sm">Sadece ilk 3 eleman alındı</div>
+                    </div>`;
+            }
+            else if (slide.visualType === 'visual_reshape') {
+                htmlContent = `
+                    <div class="flex flex-col items-center justify-center h-full space-y-6">
+                        <div class="flex flex-col items-center">
+                           <span class="text-xs text-gray-400 mb-1">1D (1x6)</span>
+                           <div class="flex space-x-1">
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">1</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">2</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">3</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">4</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">5</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">6</div>
+                           </div>
+                        </div>
+                        
+                        <div class="text-gray-500">⬇ Reshape ⬇</div>
+
+                        <div class="flex flex-col items-center">
+                           <span class="text-xs text-gray-400 mb-1">2D (2x3)</span>
+                           <div class="grid grid-cols-3 gap-1">
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">1</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">2</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">3</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">4</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">5</div>
+                              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white font-bold rounded">6</div>
+                           </div>
+                        </div>
+                    </div>`;
+            }
+            else if (slide.visualType === 'matrix_mult_detail') {
+                htmlContent = `
+                    <div class="flex flex-col items-center justify-center h-full w-full">
+                        <div class="flex items-center space-x-2 md:space-x-4">
+                            <div class="flex flex-col items-center">
+                                <span class="mb-1 text-yellow-400 font-bold text-xs">A</span>
+                                <div class="grid grid-cols-2 gap-1 p-1 border border-yellow-500 rounded bg-gray-800">
+                                    <div class="w-6 h-6 bg-yellow-500/20 text-white flex items-center justify-center text-xs">1</div>
+                                    <div class="w-6 h-6 bg-yellow-500/20 text-white flex items-center justify-center text-xs">2</div>
+                                    <div class="w-6 h-6 bg-gray-700 flex items-center justify-center text-xs">3</div>
+                                    <div class="w-6 h-6 bg-gray-700 flex items-center justify-center text-xs">4</div>
+                                </div>
+                            </div>
+                            <div class="text-sm font-bold text-gray-400">×</div>
+                            <div class="flex flex-col items-center">
+                                <span class="mb-1 text-blue-400 font-bold text-xs">B</span>
+                                <div class="grid grid-cols-2 gap-1 p-1 border border-blue-500 rounded bg-gray-800">
+                                    <div class="w-6 h-6 bg-blue-500/20 text-white flex items-center justify-center text-xs">5</div>
+                                    <div class="w-6 h-6 bg-gray-700 flex items-center justify-center text-xs">6</div>
+                                    <div class="w-6 h-6 bg-blue-500/20 text-white flex items-center justify-center text-xs">7</div>
+                                    <div class="w-6 h-6 bg-gray-700 flex items-center justify-center text-xs">8</div>
+                                </div>
+                            </div>
+                            <div class="text-sm font-bold text-gray-400">=</div>
+                            <div class="flex flex-col items-center">
+                                <span class="mb-1 text-green-400 font-bold text-xs">Sonuç</span>
+                                <div class="grid grid-cols-2 gap-1 p-1 border border-green-500 rounded bg-gray-800">
+                                    <div class="w-6 h-6 bg-green-500 text-white font-bold flex items-center justify-center text-xs animate-pulse">19</div>
+                                    <div class="w-6 h-6 bg-gray-700 flex items-center justify-center text-xs">?</div>
+                                    <div class="w-6 h-6 bg-gray-700 flex items-center justify-center text-xs">?</div>
+                                    <div class="w-6 h-6 bg-gray-700 flex items-center justify-center text-xs">?</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
             else {
                 htmlContent = `<div class="flex justify-center items-center h-48 bg-white/5 rounded-lg border border-dashed border-gray-500 w-full"><p class="text-gray-400">Görselleştirme</p></div>`;
             }
