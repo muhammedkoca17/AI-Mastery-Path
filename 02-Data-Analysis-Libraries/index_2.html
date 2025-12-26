@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Veri Bilimi & Yapay Zeka Temelleri - Final Tasarım</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+/* 1. TEMEL AYARLAR */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0f172a; /* Slate 950 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: #f8fafc;
+  overflow: hidden;
+}
+
+/* 2. SLAYT KONTEYNERI */
+.slide-container {
+  background-color: #1e293b; /* Slate 800 */
+  border: 1px solid #334155;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  display: none; /* Varsayılan olarak gizli */
+  flex-direction: column;
+  height: 720px;
+  width: 1280px; /* 16:9 Aspect Ratio */
+  /* GÜNCELLEME: Alt padding artırıldı (Dipnot için yer açıldı) */
+  padding: 50px 60px 130px 60px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-container.active {
+    display: flex; /* Sadece aktif slayt görünür */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Slayt Numarası - GÜNCELLENDİ (Sağ Üst Köşe) */
+.slide-number {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #94a3b8;
+    font-size: 16px;
+    background: #0f172a;
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid #334155;
+    z-index: 50;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+/* Dekoratif Arka Plan Deseni */
+.slide-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.slide-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 3. TİPOGRAFİ */
+h1, h2, h3 {
+  font-family: 'JetBrains Mono', monospace;
+  margin: 0;
+}
+
+.slide-title {
+  color: #38bdf8; /* Sky 400 */
+  font-size: 38px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #334155;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+p, li, td, th {
+  font-size: 20px; 
+  line-height: 1.5;
+  color: #cbd5e1; /* Slate 300 */
+}
+
+strong { color: #4ade80; font-weight: 700; }
+em { color: #f472b6; font-style: normal; font-family: 'JetBrains Mono', monospace; }
+code {
+  background-color: #0f172a;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #fbbf24;
+  border: 1px solid #334155;
+}
+
+pre {
+    background-color: #0f172a;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    font-family: 'JetBrains Mono', monospace;
+    color: #e2e8f0;
+    overflow-x: auto;
+    font-size: 16px;
+}
+
+/* 4. DÜZENLER (LAYOUTS) */
+.content-area {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: flex-start;
+  padding-bottom: 20px;
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  height: 100%;
+}
+
+.two-column.tiled > div {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 30px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card {
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+.card:hover { transform: translateY(-5px); border-color: #38bdf8; }
+
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+.big-icon { font-size: 50px; margin-bottom: 15px; color: #38bdf8; }
+
+.math-block {
+    background: #0f172a;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 28px;
+    color: #e2e8f0;
+    border: 1px solid #334155;
+    margin: 15px 0;
+}
+
+/* İkonlar ve Listeler */
+ul.tech-list { list-style: none; padding: 0; }
+ul.tech-list li { margin-bottom: 15px; padding-left: 35px; position: relative; }
+ul.tech-list li::before {
+    content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+    color: #4ade80; position: absolute; left: 0; top: 4px; font-size: 20px;
+}
+
+/* 5. DİPNOT - GÜNCELLENDİ (Footer Yapısı) */
+.instructor-note {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    background: rgba(15, 23, 42, 0.98);
+    border-left: none; 
+    border-top: 5px solid #fbbf24; /* Üstten çizgi */
+    padding: 20px 60px; /* İçerik paddingi */
+    border-radius: 0 0 16px 16px; /* Sadece alt köşeler */
+    color: #94a3b8;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+    z-index: 100;
+}
+
+.instructor-note i { font-size: 32px; color: #fbbf24; }
+.note-content strong {
+    color: #fbbf24; display: block; font-family: 'JetBrains Mono';
+    margin-bottom: 5px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* 6. GÖRSEL DÜZELTMELER */
+
+/* Reshape Demo */
+.reshape-demo {
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    background: #0f172a; padding: 20px; border-radius: 12px; border: 1px solid #334155;
+}
+.shape-box {
+    width: 30px; height: 30px; background: #38bdf8; border: 2px solid #7dd3fc;
+    display: flex; justify-content: center; align-items: center; font-size: 12px; color: #0f172a; font-weight: bold;
+}
+.shape-arrow { font-size: 24px; color: #4ade80; }
+.shape-grid-2x6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+.shape-grid-3x4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+
+/* RGB Demo */
+.rgb-container {
+    position: relative; width: 300px; height: 300px; margin: 0 auto; perspective: 1000px;
+}
+.rgb-layer {
+    position: absolute; width: 200px; height: 200px; border-radius: 10px;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 40px; font-weight: bold; color: white;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.5);
+    transition: transform 0.5s;
+}
+.rgb-layer.r { background: rgba(239, 68, 68, 0.6); top: 0; left: 50px; transform: rotateX(40deg) rotateZ(-10deg) translateZ(60px); }
+.rgb-layer.g { background: rgba(34, 197, 94, 0.6); top: 50px; left: 50px; transform: rotateX(40deg) rotateZ(-10deg) translateZ(0px); }
+.rgb-layer.b { background: rgba(59, 130, 246, 0.6); top: 100px; left: 50px; transform: rotateX(40deg) rotateZ(-10deg) translateZ(-60px); }
+
+/* Comparison Table */
+.comparison-table { width: 100%; border-collapse: collapse; }
+.comparison-table th { background: #1e293b; color: #38bdf8; padding: 15px; border-bottom: 2px solid #334155; }
+.comparison-table td { padding: 15px; border-bottom: 1px solid #334155; text-align: left; }
+.comparison-table tr:hover { background: #1e293b; }
+
+/* Memory Structure Demo */
+.memory-demo-container { display: flex; flex-direction: column; gap: 15px; }
+.mem-row { display: flex; align-items: center; gap: 10px; }
+.mem-label { width: 100px; font-weight: bold; color: #cbd5e1; font-size: 14px; }
+.mem-block-container { display: flex; gap: 2px; }
+.mem-cell {
+    width: 50px; height: 50px; display: flex; justify-content: center; align-items: center;
+    border: 2px solid; border-radius: 4px; font-family: 'JetBrains Mono'; font-weight: bold; font-size: 14px;
+}
+.mem-arrow { color: #64748b; font-size: 20px; }
+
+/* 7. NAVİGASYON */
+.controls { display: flex; gap: 20px; margin-top: 20px; align-items: center; }
+.nav-btn {
+    background-color: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 15px 30px;
+    border-radius: 50px; font-family: 'JetBrains Mono'; font-size: 18px; cursor: pointer;
+    transition: all 0.3s; display: flex; align-items: center; gap: 10px;
+}
+.nav-btn:hover { background-color: #38bdf8; color: #0f172a; transform: translateY(-2px); }
+.nav-btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+</style>
+</head>
+<body>
+
+<!-- Slide 1: Kapak -->
+<div class="slide-container active">
+    <div style="text-align: center; margin: auto;">
+        <div style="font-size: 100px; color: #38bdf8; margin-bottom: 20px;"><i class="fa-brands fa-python"></i></div>
+        <h1 style="font-size: 64px; line-height: 1.2;">VERİ BİLİMİ & <br>YAPAY ZEKA TEMELLERİ</h1>
+        <p style="font-size: 28px; margin-top: 30px; color: #94a3b8;">Numpy & Pandas Derinlemesine Bakış</p>
+        <div style="margin-top: 50px; display: inline-block; padding: 10px 30px; border: 1px solid #4ade80; color: #4ade80; border-radius: 50px; font-family: 'JetBrains Mono';">
+            Ders -2
+        </div>
+    </div>
+    <div class="slide-number">1 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-lightbulb"></i>
+        <div class="note-content">
+            <strong>Derse Bakış</strong>
+            Bu interaktif sunumda, yapay zekanın "mutfağına" giriyoruz. Kodların arkasında dönen matematiği ve mantığı, gerçek hayat örnekleriyle adım adım inceleyeceğiz.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 2: Yol Haritası -->
+<div class="slide-container">
+    <h2 class="slide-title"><i class="fa-solid fa-map-location-dot"></i> Ders Akışı</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div class="card">
+                <div class="big-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>1. Numpy & Matematik</h3>
+                <p style="font-size: 16px; margin-top: 10px;">Matrisler, Vektörler, Tensörler, Broadcasting ve Dot Product.</p>
+            </div>
+            <div class="card">
+                <div class="big-icon"><i class="fa-solid fa-table"></i></div>
+                <h3>2. Pandas & Veri Analizi</h3>
+                <p style="font-size: 16px; margin-top: 10px;">DataFrames, Eksik Veri Yönetimi, Filtreleme ve Gruplama.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">2 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-compass"></i>
+        <div class="note-content">
+            <strong>Büyük Resim</strong>
+            Bu derste sadece "nasıl" yapılır değil, "neden" yapılır sorusuna odaklanacağız. Görselleştirmeyi çıkardık, verinin kalbine iniyoruz.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Numpy Giriş -->
+<div class="slide-container">
+    <h2 class="slide-title"><i class="fa-solid fa-microchip"></i> 1. Numpy: Neden Var?</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Standart Python Listeleri</h3>
+                <p>Python listeleri <code>[1, "a", 3.5]</code> esnektir ancak bellekte dağınıktır. İşlemci her eleman için adresi tekrar arar.</p>
+                <div class="warning-box">
+                    <strong>Sorun:</strong> Matematiksel işlemlerde çok yavaştır.
+                </div>
+            </div>
+            <div>
+                <h3>Numpy (C-Contiguous)</h3>
+                <p>C dili ile yazılmıştır. Veriler bellekte <strong>bitişik (yan yana)</strong> bloklar halinde tutulur.</p>
+                <ul class="tech-list" style="margin-top: 20px;">
+                    <li>Vektörel (Toplu) İşlem</li>
+                    <li>Daha Az Bellek Tüketimi</li>
+                    <li>50x - 100x Hız Farkı</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">3 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-book"></i>
+        <div class="note-content">
+            <strong>Gerçek Hayat Analojisi</strong>
+            Python Listesi, kitapların rastgele masalarda durduğu dağınık bir kütüphanedir. Numpy ise kitapların Dewey sistemine göre raflarda milimetrik dizildiği modern bir arşivdir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4: Array Mimarisi (Structure) -->
+<div class="slide-container">
+    <h2 class="slide-title">Array Mimarisi: Kaputun Altı</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>1. Bellek Yerleşimi (Memory Layout)</h3>
+                <p>Verilerin RAM'de (Hafıza) nasıl saklandığını anlamak performansı çözer.</p>
+                <div class="memory-demo-container" style="margin-top:20px;">
+                    <!-- Python List Representation -->
+                    <div class="mem-row">
+                        <div class="mem-label">Python List</div>
+                        <div class="mem-cell" style="border-color:#ef4444; color:#ef4444;">Ptr</div>
+                        <i class="fa-solid fa-arrow-right-long mem-arrow" style="transform: rotate(-20deg);"></i>
+                        <div class="mem-cell" style="border-color:#ef4444; border-style:dashed;">Obje</div>
+                        <i class="fa-solid fa-arrow-right-long mem-arrow" style="transform: rotate(20deg);"></i>
+                        <div class="mem-cell" style="border-color:#ef4444; border-style:dashed;">Obje</div>
+                    </div>
+                    <div style="font-size:14px; color:#94a3b8; margin-bottom:10px;">*Dağınık adresler, her erişimde zıplama gerekir.</div>
+
+                    <!-- Numpy Array Representation -->
+                    <div class="mem-row">
+                        <div class="mem-label" style="color:#4ade80;">Numpy Array</div>
+                        <div class="mem-block-container">
+                            <div class="mem-cell" style="background:#22c55e; border-color:#22c55e; color:#0f172a;">10</div>
+                            <div class="mem-cell" style="background:#22c55e; border-color:#22c55e; color:#0f172a;">20</div>
+                            <div class="mem-cell" style="background:#22c55e; border-color:#22c55e; color:#0f172a;">30</div>
+                            <div class="mem-cell" style="background:#22c55e; border-color:#22c55e; color:#0f172a;">40</div>
+                        </div>
+                    </div>
+                    <div style="font-size:14px; color:#94a3b8;">*Tek blok, adresler sıralı (0x01, 0x02, 0x03...).</div>
+                </div>
+            </div>
+            
+            <div>
+                <h3>2. Amaç ve Kullanım</h3>
+                <div class="card" style="text-align:left;">
+                    <p><i class="fa-solid fa-rocket" style="color:#f472b6;"></i> <strong>Hız (Cache Locality):</strong> İşlemci veriyi tek seferde "kepçeyle" alır. Sıralı olduğu için sonraki veri zaten hazırdır.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">4 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-microchip"></i>
+        <div class="note-content">
+            <strong>Derin Mimari</strong>
+            Array'in gücü basitliğinden gelir. Bilgisayar, 5. elemanın yerini hesaplamak için sadece <code>Başlangıç + 5 x Boyut</code> formülünü kullanır. Arama yapmaz, doğrudan adrese ışınlanır (O(1) erişim).
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Matris ve Vektör Tanımları -->
+<div class="slide-container">
+    <h2 class="slide-title">Matris ve Vektör Nedir?</h2>
+    <div class="content-area">
+        <div class="grid-3">
+            <div class="card">
+                <h3>Skaler (0D)</h3>
+                <p>Tek bir sayı.</p>
+                <div class="math-block">5</div>
+                <p style="font-size: 14px;">Örnek: Hızın (km/s)</p>
+            </div>
+            <div class="card">
+                <h3>Vektör (1D)</h3>
+                <p>Sayılar dizisi.</p>
+                <div class="math-block">[1.80, 80, 25]</div>
+                <p style="font-size: 14px;">Örnek: [Boy, Kilo, Yaş]</p>
+            </div>
+            <div class="card">
+                <h3>Matris (2D)</h3>
+                <p>Tablo.</p>
+                <div class="math-block">
+                    <math><mrow><mo>[</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr></mtable><mo>]</mo></mrow></math>
+                </div>
+                <p style="font-size: 14px;">Örnek: Siyah-Beyaz Resim</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">5 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-shapes"></i>
+        <div class="note-content">
+            <strong>Mantığı Kavra</strong>
+            Skaler bir nokta, Vektör bir çizgi, Matris ise bir dikdörtgen alandır. Boyut arttıkça verinin karmaşıklığı artar.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: Tensör Kavramı -->
+<div class="slide-container">
+    <h2 class="slide-title">İleri Seviye: Tensor (Tensör)</h2>
+    <div class="content-area">
+        <p>Yapay zekada (TensorFlow, PyTorch) sıklıkla duyacağınız kavram.</p>
+        <div class="two-column">
+            <div>
+                <ul class="tech-list">
+                    <li><strong>3D Tensor:</strong> Renkli Resim (Yükseklik, Genişlik, RGB)</li>
+                    <li><strong>4D Tensor:</strong> Resim Videosu (Zaman, Yükseklik, Genişlik, RGB)</li>
+                    <li><strong>5D Tensor:</strong> Video Koleksiyonu</li>
+                </ul>
+                <p>Tensör, matrislerin üst üste binmiş genelleştirilmiş halidir.</p>
+            </div>
+            <div style="text-align: center;">
+                <i class="fa-solid fa-cubes-stacked" style="font-size: 120px; color: #f472b6;"></i>
+                <p style="margin-top: 20px;">Veriler boyutlandıkça "Tensör" olur.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">6 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-cube"></i>
+        <div class="note-content">
+            <strong>Gerçek Hayat Analojisi</strong>
+            Matris tek bir A4 kağıdıdır (sayfa). Tensör ise o kağıtlardan oluşmuş bir kitaptır (3D). Kitaplardan oluşan bir kütüphane ise 4D Tensör olur.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Neden Matris Kullanıyoruz? -->
+<div class="slide-container">
+    <h2 class="slide-title">Neden Matris Kullanıyoruz?</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <h3>Okul Servisi Analojisi</h3>
+                <p><strong>Döngü (Loop):</strong> 1000 öğrenciyi okula tek tek taksiyle götürmek. (CPU)</p>
+                <p><strong>Matris İşlemi:</strong> 1000 öğrenciyi büyük otobüslere bindirip tek seferde götürmek. (GPU)</p>
+            </div>
+            <div>
+                <h3>Amaç: Paralelizasyon</h3>
+                <p>Bilgisayara <em>"Bu 1 milyon sayıyı tek tek çarp"</em> demek yerine, <em>"Bu iki tabloyu birbirine vur"</em> diyoruz.</p>
+                <div class="math-block" style="font-size: 24px;">
+                    GPU tek seferde binlerce çarpma yapar.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">7 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-bus"></i>
+        <div class="note-content">
+            <strong>Neden Önemli?</strong>
+            Derin öğrenme modellerinin eğitimi Matris çarpımı sayesinde aylar değil, saatler sürer. Tek tek işlem yapmak imkansızdır.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 8: Numpy Slicing (Dilimleme) -->
+<div class="slide-container">
+    <h2 class="slide-title">Veriye Erişim: Slicing (Dilimleme)</h2>
+    <div class="content-area">
+        <p>Büyük bir verinin içinden sadece ilgilendiğimiz kısmı (ROI) nasıl alırız?</p>
+        <div class="two-column">
+            <div>
+                <p>Sözdizimi: <code>array[başlangıç:bitiş:adım]</code></p>
+                <pre>
+# Bir resmin sol üst köşesini kırpma
+kırpılan = resim[0:100, 0:100]
+                </pre>
+                <p style="margin-top:15px;">Bu işlem <strong>View (Görünüm)</strong> döndürür, kopyalamaz. Yani çok hızlıdır ve hafıza kaplamaz.</p>
+            </div>
+            <div style="background:#000; border:2px solid #334155; border-radius:12px; position:relative; display:flex; justify-content:center; align-items:center;">
+                <!-- Full Image Rep -->
+                <div style="width:80%; height:80%; background:#1e293b; border:1px dashed #64748b; position:relative;">
+                    <span style="position:absolute; bottom:5px; right:5px; color:#64748b;">Orjinal Resim</span>
+                    <!-- Slice Rep -->
+                    <div style="position:absolute; top:0; left:0; width:40%; height:40%; background:rgba(56, 189, 248, 0.3); border:2px solid #38bdf8;">
+                        <span style="position:absolute; top:5px; left:5px; color:#38bdf8; font-weight:bold;">[0:100, 0:100]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">8 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-crop-simple"></i>
+        <div class="note-content">
+            <strong>Hafıza Yönetimi</strong>
+            Slicing yaparken Python veriyi kopyalamaz, sadece "Oraya bak" der. Bu yüzden 10GB'lık bir verinin bir kısmını kesmek 0 saniye sürer.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 9: Broadcasting -->
+<div class="slide-container">
+    <h2 class="slide-title">Sihirli Özellik: Broadcasting</h2>
+    <div class="content-area">
+        <p>Farklı boyuttaki matrisleri döngü kurmadan işleme sokma kuralıdır.</p>
+        <div class="two-column">
+            <div>
+                <h3>Örnek Senaryo</h3>
+                <p>Bir matrisin tüm elemanlarına 5 eklemek istiyoruz.</p>
+                <p><code>matris + 5</code></p>
+                <p>Numpy, o "5" sayısını otomatik olarak matrisin boyutuna kadar uzatır (yayınlar) ve işlemi yapar.</p>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div class="math-block" style="font-size:20px;">[1, 2, 3]</div>
+                    <div style="font-size:30px;">+</div>
+                    <div class="math-block" style="font-size:20px;">5</div>
+                </div>
+                <div style="font-size:30px;"><i class="fa-solid fa-arrow-down"></i></div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div class="math-block" style="font-size:20px;">[1, 2, 3]</div>
+                    <div style="font-size:30px;">+</div>
+                    <div class="math-block" style="font-size:20px; border-color:#4ade80;">[5, 5, 5]</div>
+                </div>
+                <div style="font-size:14px; color:#4ade80;">*Numpy arka planda bunu yapar.</div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">9 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-rss"></i>
+        <div class="note-content">
+            <strong>Neden "Yayınlama"?</strong>
+            Küçük olan veri (örneğin 5), büyük olan verinin şekline bürünür. Radyo yayını gibi her yere dağılır.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 10: Reshape Giriş -->
+<div class="slide-container">
+    <h2 class="slide-title"><code>reshape()</code> Fonksiyonu</h2>
+    <div class="content-area">
+        <p>Verinin hafızadaki sırasını bozmadan, "bakış açımızı" değiştirir.</p>
+        <div class="two-column">
+            <div>
+                <h3>Kural: Hacim Korunmalı</h3>
+                <p>Toplam eleman sayısı asla değişmez!</p>
+                <p><code>12 elemanımız</code> varsa:</p>
+                <ul>
+                    <li>(1, 12) -> Tek sıra (1x12)</li>
+                    <li>(2, 6) -> 2 Satır, 6 Sütun</li>
+                    <li>(3, 4) -> 3 Satır, 4 Sütun</li>
+                </ul>
+            </div>
+            <div class="reshape-demo">
+                <div style="color: #94a3b8; font-size: 14px;">1x12 (Vektör)</div>
+                <div class="shape-grid-2x6" style="display:flex;">
+                    <div class="shape-box">1</div><div class="shape-box">2</div><div class="shape-box">3</div><div class="shape-box">4</div>
+                    <div class="shape-box">5</div><div class="shape-box">6</div><div class="shape-box">7</div><div class="shape-box">8</div>
+                    <div class="shape-box">9</div><div class="shape-box">10</div><div class="shape-box">11</div><div class="shape-box">12</div>
+                </div>
+                <div class="shape-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+                <div style="color: #94a3b8; font-size: 14px;">3x4 (Matris)</div>
+                <div class="shape-grid-3x4">
+                    <div class="shape-box">1</div><div class="shape-box">2</div><div class="shape-box">3</div><div class="shape-box">4</div>
+                    <div class="shape-box">5</div><div class="shape-box">6</div><div class="shape-box">7</div><div class="shape-box">8</div>
+                    <div class="shape-box">9</div><div class="shape-box">10</div><div class="shape-box">11</div><div class="shape-box">12</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">10 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-glass-water"></i>
+        <div class="note-content">
+            <strong>Gerçek Hayat Analojisi</strong>
+            Elinizdeki su miktarı (veri) aynıdır. İster uzun ince bir bardağa dökün, ister geniş bir kaseye. Suyun özü değişmez, sadece kabın şekli değişir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 11: Reshape - Derin Bakış -->
+<div class="slide-container">
+    <h2 class="slide-title">Reshape Neden Önemli?</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Yapay Zeka Modeline Veri Hazırlığı</h3>
+                <p>Bir yapay zeka modeli genellikle girdileri belirli bir formatta ister.</p>
+                <p>Örneğin: Elinizde 28x28 piksellik bir resim var. Ama modeliniz düz bir vektör (784 eleman) istiyor.</p>
+                <code>img.reshape(784)</code>
+                <p style="margin-top:10px;">Veya tam tersi, düz veriyi resme çevirmek için kullanılır.</p>
+            </div>
+            <div class="math-block">
+                28 x 28 = 784
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">11 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-puzzle-piece"></i>
+        <div class="note-content">
+            <strong>Pratik Bilgi</strong>
+            AI modelleri çok mızmızdır. Giriş kapısının şekli neyse veriyi ona uydurmak zorundasınız. Reshape, veriyi o kapıdan geçecek şekle sokar.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 12: Görüntü İşleme Temelleri -->
+<div class="slide-container">
+    <h2 class="slide-title"><i class="fa-solid fa-image"></i> Görüntü İşleme: Piksel Dünyası</h2>
+    <div class="content-area">
+        <p>Bilgisayar için resim yoktur, sadece sayılar matrisi vardır.</p>
+        <div class="grid-3">
+            <div class="card">
+                <h3>Siyah-Beyaz</h3>
+                <p>(Yükseklik, Genişlik)</p>
+                <p>Tek katman.</p>
+                <p>0 (Siyah) - 255 (Beyaz)</p>
+            </div>
+            <div class="card">
+                <h3>Renkli (RGB)</h3>
+                <p>(Yükseklik, Genişlik, 3)</p>
+                <p>Üç katman: Kırmızı, Yeşil, Mavi.</p>
+            </div>
+            <div class="card">
+                <h3>RGBA (PNG)</h3>
+                <p>(Yükseklik, Genişlik, 4)</p>
+                <p>Dördüncü katman: Alpha (Saydamlık).</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">12 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-eye"></i>
+        <div class="note-content">
+            <strong>Bakış Açısı</strong>
+            Ekranda gördüğün her renk, aslında 3 farklı lambanın (Kırmızı, Yeşil, Mavi) parlaklık şiddetinden (0-255 arası sayı) ibarettir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 13: 3 Boyutlu Dizi (RGB) Görseli -->
+<div class="slide-container">
+    <h2 class="slide-title">3 Boyutlu Dizi (RGB) Yapısı</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <p>Renkli bir fotoğraf aslında 3 adet şeffaf kağıdın üst üste konması gibidir.</p>
+                <ul class="tech-list">
+                    <li><strong style="color:#ef4444">Kanal 0:</strong> Kırmızı Pikseller (R)</li>
+                    <li><strong style="color:#22c55e">Kanal 1:</strong> Yeşil Pikseller (G)</li>
+                    <li><strong style="color:#3b82f6">Kanal 2:</strong> Mavi Pikseller (B)</li>
+                </ul>
+                <p>Bu 3 matris üst üste binince (z ekseninde) renkli görüntü oluşur.</p>
+            </div>
+            <div class="rgb-container">
+                <div class="rgb-layer b">B</div>
+                <div class="rgb-layer g">G</div>
+                <div class="rgb-layer r">R</div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">13 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-layer-group"></i>
+        <div class="note-content">
+            <strong>Hayal Et</strong>
+            Bir sandviç düşün. Ekmeği Kırmızı, Peyniri Yeşil, Marulu Mavi katman olsun. Bilgisayar bu sandviçe tepeden bakar ve renkleri görür.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 14: Piksel Gezme (Traversal) -->
+<div class="slide-container">
+    <h2 class="slide-title">Matriste Piksel Gezme</h2>
+    <div class="content-area">
+        <p>Bir resmi işlerken (örneğin filtre uygularken) her noktaya uğramalıyız.</p>
+        <pre>
+# 3 Boyutlu Gezinti Mantığı
+for i in range(yukseklik):      # Satır
+    for j in range(genislik):   # Sütun
+        for k in range(3):      # Renk (R,G,B)
+            piksel = resim[i][j][k]
+            # İşlem (Örn: Rengi soldur)
+        </pre>
+        <div class="warning-box">
+            Bu döngü Python'da yavaştır! Numpy ile döngüsüz (vektörel) yaparız.
+        </div>
+    </div>
+    <div class="slide-number">14 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-person-walking"></i>
+        <div class="note-content">
+            <strong>Manuel vs Otomatik</strong>
+            Piksel gezmek, tarladaki her başağa tek tek dokunmak gibidir (Loop). Numpy ise tarlayı biçerdöverle tek seferde hasat etmektir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 15: Flattening (Düzleştirme) -->
+<div class="slide-container">
+    <h2 class="slide-title">Flattening (Düzleştirme)</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <h3>Nedir?</h3>
+                <p>3 Boyutlu bir matrisi (küpü), tek boyutlu upuzun bir zincire dönüştürmektir.</p>
+            </div>
+            <div>
+                <h3>Neden?</h3>
+                <p>Yapay Sinir Ağlarının (Neural Networks) giriş kapısı (Input Layer) genellikle düz vektör kabul eder.</p>
+                <code>resim.flatten()</code>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <i class="fa-solid fa-cube"></i> <i class="fa-solid fa-arrow-right"></i> <i class="fa-solid fa-ruler-horizontal"></i>
+        </div>
+    </div>
+    <div class="slide-number">15 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-spaghetti-monster-flying"></i>
+        <div class="note-content">
+            <strong>Gerçek Hayat Analojisi</strong>
+            Bir kazağı söküp tek bir uzun ip haline getirmek gibidir. Örgü deseni (görüntü yapısı) kaybolur ama ip (veri) korunur.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 16: Dot Product Giriş -->
+<div class="slide-container">
+    <h2 class="slide-title"><i class="fa-solid fa-xmark"></i> Dot Product (Noktasal Çarpım)</h2>
+    <div class="content-area">
+        <p>Yapay zekanın kalbidir. İki vektörün benzerliğini veya etkisini ölçer.</p>
+        <div class="math-block">
+            <math>
+                <mrow>
+                    <mi>A</mi>
+                    <mo>⋅</mo>
+                    <mi>B</mi>
+                    <mo>=</mo>
+                    <munderover>
+                        <mo>∑</mo>
+                        <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+                        <mi>n</mi>
+                    </munderover>
+                    <msub><mi>a</mi><mi>i</mi></msub>
+                    <msub><mi>b</mi><mi>i</mi></msub>
+                </mrow>
+            </math>
+        </div>
+        <p style="text-align: center;">"Karşılıklı elemanları çarp ve hepsini topla."</p>
+    </div>
+    <div class="slide-number">16 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-heart-pulse"></i>
+        <div class="note-content">
+            <strong>Can Damarı</strong>
+            Tüm yapay zeka modelleri, ChatGPT'den otonom araçlara kadar, arka planda sadece milyarlarca kez bu basit çarpma işlemini yapar.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 17: Dot Product - Görsel Hesaplama -->
+<div class="slide-container">
+    <h2 class="slide-title">Dot Product Nasıl Yapılır?</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div style="font-size: 28px;">
+                <p><strong>A = [1, 2, 3]</strong></p>
+                <p><strong>B = [4, 5, 6]</strong></p>
+                <hr>
+                <p>1. Adım: 1 x 4 = 4</p>
+                <p>2. Adım: 2 x 5 = 10</p>
+                <p>3. Adım: 3 x 6 = 18</p>
+                <hr>
+                <p><strong>Sonuç:</strong> 4 + 10 + 18 = <strong>32</strong></p>
+            </div>
+            <div>
+                <h3>Anlamı Nedir?</h3>
+                <p>Bu sayı (32), iki vektörün ne kadar "aynı yöne" baktığını veya birbirini ne kadar güçlendirdiğini gösterir.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">17 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-calculator"></i>
+        <div class="note-content">
+            <strong>Eğitmen Notu</strong>
+            Dikkat edin, sonuç bir matris değil, tek bir sayıdır (Skaler). İki listeden tek bir özet sayı çıkarıyoruz.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 18: Dot Product - Gerçek Hayat -->
+<div class="slide-container">
+    <h2 class="slide-title">Hayattan Örnek: Kasa Fişi</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <h3>Sepetiniz (A Vektörü)</h3>
+                <ul>
+                    <li>2 Ekmek</li>
+                    <li>3 Süt</li>
+                    <li>1 Çikolata</li>
+                </ul>
+                <code>A = [2, 3, 1]</code>
+            </div>
+            <div>
+                <h3>Fiyatlar (B Vektörü)</h3>
+                <ul>
+                    <li>Ekmek: 5 TL</li>
+                    <li>Süt: 20 TL</li>
+                    <li>Çikolata: 10 TL</li>
+                </ul>
+                <code>B = [5, 20, 10]</code>
+            </div>
+        </div>
+        <div class="math-block" style="margin-top: 20px;">
+            (2x5) + (3x20) + (1x10) = 10 + 60 + 10 = <strong>80 TL</strong>
+        </div>
+    </div>
+    <div class="slide-number">18 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-receipt"></i>
+        <div class="note-content">
+            <strong>En Net Örnek</strong>
+            Market kasasında ödediğiniz toplam tutar, aslında sepetiniz ile fiyat listesinin 'Dot Product' sonucudur.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 19: Dot Product ve Yapay Zeka -->
+<div class="slide-container">
+    <h2 class="slide-title">Yapay Zekadaki Karşılığı</h2>
+    <div class="content-area">
+        <p>Yapay sinir ağlarında her nöron bu işlemi yapar.</p>
+        <div class="grid-3">
+            <div class="card">
+                <h3>Girdi (Input)</h3>
+                <p>Verileriniz (Resim pikselleri, kelimeler...)</p>
+            </div>
+            <div class="card" style="border-color: #f472b6;">
+                <h3>Ağırlık (Weight)</h3>
+                <p>Modelin öğrendiği bilgiler.</p>
+            </div>
+            <div class="card">
+                <h3>Çıktı</h3>
+                <p>Karar.</p>
+            </div>
+        </div>
+        <div class="math-block">
+            Karar = (Girdi . Ağırlık) + Bias
+        </div>
+    </div>
+    <div class="slide-number">19 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-brain"></i>
+        <div class="note-content">
+            <strong>Beyin Gibi</strong>
+            "Ağırlık", o bilginin ne kadar önemli olduğudur. Eğer "Sınav Notu" ağırlığı yüksekse, sonuç (Geçme/Kalma) ondan çok etkilenir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 20: Veri Tipleri -->
+<div class="slide-container">
+    <h2 class="slide-title">Veri Tipleri: Neden float32?</h2>
+    <div class="content-area">
+        <p>Derin öğrenmede standart <strong>float32</strong>'dir.</p>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <tr style="background: #334155;">
+                <th style="padding: 15px;">Tip</th>
+                <th style="padding: 15px;">Bellek (1 Milyon Sayı)</th>
+                <th style="padding: 15px;">Kullanım</th>
+            </tr>
+            <tr>
+                <td style="padding: 15px; border-bottom: 1px solid #334155;">float64 (Double)</td>
+                <td style="padding: 15px; border-bottom: 1px solid #334155;">8 MB</td>
+                <td style="padding: 15px; border-bottom: 1px solid #334155;">Bilimsel Hesaplama</td>
+            </tr>
+            <tr>
+                <td style="padding: 15px; border-bottom: 1px solid #334155; color: #4ade80;"><strong>float32</strong></td>
+                <td style="padding: 15px; border-bottom: 1px solid #334155; color: #4ade80;"><strong>4 MB</strong></td>
+                <td style="padding: 15px; border-bottom: 1px solid #334155; color: #4ade80;"><strong>Yapay Zeka (Standart)</strong></td>
+            </tr>
+            <tr>
+                <td style="padding: 15px;">float16</td>
+                <td style="padding: 15px;">2 MB</td>
+                <td style="padding: 15px;">Hızlı LLM'ler</td>
+            </tr>
+        </table>
+        <p style="margin-top: 20px;">Yanlış tip seçimi GPU belleğini (VRAM) gereksiz doldurur!</p>
+    </div>
+    <div class="slide-number">20 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-memory"></i>
+        <div class="note-content">
+            <strong>Gerçek Hayat Analojisi</strong>
+            Kamyona yük yüklüyorsunuz. Kutular gereksiz yere büyükse (float64), kamyon çabuk dolar. Daha küçük, standart kutular (float32) ile daha çok veri taşırsınız.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 21: Pandas Giriş -->
+<div class="slide-container">
+    <h2 class="slide-title"><i class="fa-solid fa-database"></i> 2. Pandas: Verinin Terzisi</h2>
+    <div class="content-area">
+        <p>Ham veriyi (CSV, Excel, SQL) alıp işlenebilir "Tablo" formatına sokar.</p>
+        <div class="two-column">
+            <div class="card">
+                <h3>Veri Okuma</h3>
+                <p>Birçok formatı dijital hale getirir.</p>
+                <code>pd.read_csv("veri.csv")</code>
+            </div>
+            <div class="card">
+                <h3>Veri Temizleme</h3>
+                <p>Eksik (NaN) verileri doldurur, hataları siler.</p>
+                <code>df.dropna()</code>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">21 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-scissors"></i>
+        <div class="note-content">
+            <strong>Analoji</strong>
+            Pandas, kumaşı (ham veri) alıp ütüleyen, kesen ve dikime hazırlayan bir terzi gibidir. Kumaş düzgün olmazsa elbise (model) dikilemez.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 22: Series vs DataFrame -->
+<div class="slide-container">
+    <h2 class="slide-title">Series vs DataFrame</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <i class="fa-solid fa-grip-lines-vertical" style="font-size: 50px; color: #f472b6;"></i>
+                <h3>Series (Seri)</h3>
+                <p><strong>1 Boyutludur.</strong></p>
+                <p>Sadece tek bir sütun.</p>
+                <p>Örnek: Sadece "Fiyat" listesi.</p>
+            </div>
+            <div>
+                <i class="fa-solid fa-table" style="font-size: 50px; color: #38bdf8;"></i>
+                <h3>DataFrame</h3>
+                <p><strong>2 Boyutludur.</strong></p>
+                <p>Satır ve Sütunlar topluluğu.</p>
+                <p>Örnek: Tarih, Ürün, Fiyat, Adet tablosu.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">22 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-table-columns"></i>
+        <div class="note-content">
+            <strong>Aklında Tut</strong>
+            DataFrame, yan yana gelmiş Series'lerden oluşur. Excel'deki tek bir sütun Series, tüm sayfa DataFrame'dir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 23: Pandas Anatomi -->
+<div class="slide-container">
+    <h2 class="slide-title">Pandas'ın Kalbi: Anatomi</h2>
+    <div class="content-area">
+        <p>Bir DataFrame 3 ana parçadan oluşur.</p>
+        <div style="display:flex; justify-content:center; align-items:center; gap:20px; font-family:'JetBrains Mono'; margin-top:30px;">
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="height:50px;"></div>
+                <div style="background:#f472b6; color:#0f172a; padding:15px; border-radius:8px;">Index (Satır)</div>
+                <div style="background:#f472b6; color:#0f172a; padding:15px; border-radius:8px;">Index (Satır)</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; gap:10px;">
+                    <div style="background:#38bdf8; color:#0f172a; padding:15px; width:120px; text-align:center; border-radius:8px;">Column</div>
+                    <div style="background:#38bdf8; color:#0f172a; padding:15px; width:120px; text-align:center; border-radius:8px;">Column</div>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <div style="border:2px solid #4ade80; padding:15px; width:120px; text-align:center; border-radius:8px;">Veri</div>
+                    <div style="border:2px solid #4ade80; padding:15px; width:120px; text-align:center; border-radius:8px;">Veri</div>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <div style="border:2px solid #4ade80; padding:15px; width:120px; text-align:center; border-radius:8px;">Veri</div>
+                    <div style="border:2px solid #4ade80; padding:15px; width:120px; text-align:center; border-radius:8px;">Veri</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">23 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-bone"></i>
+        <div class="note-content">
+            <strong>İskelet Yapısı</strong>
+            Index satırların ismidir (0, 1, 2...). Columns sütunların ismidir (Yaş, Fiyat...). Veri ise bunların kesişimidir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 24: Numpy vs Pandas -->
+<div class="slide-container">
+    <h2 class="slide-title">Karşılaştırma: Numpy vs Pandas</h2>
+    <div class="content-area">
+        <table class="comparison-table">
+            <tr>
+                <th>Özellik</th>
+                <th>Numpy Array</th>
+                <th>Pandas DataFrame</th>
+            </tr>
+            <tr>
+                <td><strong>Veri Tipi</strong></td>
+                <td>Homojen (Sadece Sayı)</td>
+                <td>Heterojen (Sayı, Yazı, Tarih...)</td>
+            </tr>
+            <tr>
+                <td><strong>Amaç</strong></td>
+                <td>Matematiksel Hesaplama</td>
+                <td>Veri Analizi & İşleme</td>
+            </tr>
+            <tr>
+                <td><strong>Hız</strong></td>
+                <td>Çok Hızlı (C temelli)</td>
+                <td>Hızlı (Numpy üzerine kurulu)</td>
+            </tr>
+            <tr>
+                <td><strong>Etiketleme</strong></td>
+                <td>Yok (Sadece indeks 0,1,2)</td>
+                <td>Var (Satır/Sütun isimleri)</td>
+            </tr>
+        </table>
+    </div>
+    <div class="slide-number">24 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <div class="note-content">
+            <strong>Hangisini Seçmeli?</strong>
+            Matris çarpacaksan Numpy. Excel dosyasını okuyup analiz edeceksen Pandas. Pandas aslında Numpy'ın süslü ve yetenekli halidir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 25: Pandas Keşif -->
+<div class="slide-container">
+    <h2 class="slide-title">Pandas: Veriye İlk Bakış</h2>
+    <div class="content-area">
+        <p>Bilinmeyen bir veriyle karşılaştığınızda yapmanız gereken ilk 3 hareket.</p>
+        <div class="grid-3">
+            <div class="card">
+                <h3>1. <code>df.head()</code></h3>
+                <p>İlk 5 satırı getir.</p>
+                <div style="background:#0f172a; border:1px solid #334155; padding:10px; font-size:12px; margin-top:10px; text-align:left;">
+                    ID | Ad | Yaş<br>
+                    0 | Ali | 25<br>
+                    1 | Ece | 30<br>
+                    ...
+                </div>
+            </div>
+            <div class="card">
+                <h3>2. <code>df.info()</code></h3>
+                <p>Röntgen çek (Boş veri var mı? Tipler ne?).</p>
+                <p style="font-size:14px; color:#4ade80;">object, int64, float32</p>
+            </div>
+            <div class="card">
+                <h3>3. <code>df.describe()</code></h3>
+                <p>İstatistiksel Özet.</p>
+                <p style="font-size:14px;">Ortalama, Standart Sapma, Min, Max.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">25 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-user-doctor"></i>
+        <div class="note-content">
+            <strong>Teşhis Koymak</strong>
+            Doktora gittiğinizde önce nabız ve tansiyon ölçülür. Pandas'ta da önce bu fonksiyonlarla verinin sağlık durumuna bakılır.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 26: Loc ve Iloc -->
+<div class="slide-container">
+    <h2 class="slide-title">Seçim İşlemleri: <code>loc</code> vs <code>iloc</code></h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3><i class="fa-solid fa-tag" style="color:#f472b6;"></i> <code>loc</code> (Label Based)</h3>
+                <p><strong>İsme Göre Seçim</strong></p>
+                <p>Satırın veya sütunun <strong>adını</strong> kullanırsınız.</p>
+                <pre>df.loc[5, "Yaş"]</pre>
+                <p><em>"İsmi 5 olan satırın, Yaş sütununu ver."</em></p>
+            </div>
+            <div>
+                <h3><i class="fa-solid fa-hashtag" style="color:#38bdf8;"></i> <code>iloc</code> (Index Based)</h3>
+                <p><strong>Konuma Göre Seçim</strong></p>
+                <p>Sadece <strong>sayısal sıra</strong> kullanırsınız.</p>
+                <pre>df.iloc[5, 2]</pre>
+                <p><em>"5. sıradaki satırın, 2. sıradaki sütununu ver."</em></p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">26 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-crosshairs"></i>
+        <div class="note-content">
+            <strong>Hedefi Vurmak</strong>
+            Veri içinde kaybolmamak için bu iki komut pusulanızdır. İsimle arıyorsanız LOC, sırayla arıyorsanız ILOC.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 27: Kayıp Veri -->
+<div class="slide-container">
+    <h2 class="slide-title">Baş Belası: Kayıp Veri (NaN)</h2>
+    <div class="content-area">
+        <p>Gerçek hayat verisi asla mükemmel değildir. Boşluklarla doludur.</p>
+        <div class="grid-3">
+            <div class="card" style="border-color:#ef4444;">
+                <h3>Tespit Et</h3>
+                <p><code>df.isnull().sum()</code></p>
+                <p>Hangi sütunda kaç tane boş var?</p>
+            </div>
+            <div class="card" style="border-color:#fbbf24;">
+                <h3>Kurtul (Sil)</h3>
+                <p><code>df.dropna()</code></p>
+                <p>Boş olan satırı tamamen sil.</p>
+                <p style="font-size:12px;">(Veri azsa tehlikeli!)</p>
+            </div>
+            <div class="card" style="border-color:#4ade80;">
+                <h3>Doldur</h3>
+                <p><code>df.fillna(ortalama)</code></p>
+                <p>Boşlukları ortalama veya 0 ile doldur.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">27 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-eraser"></i>
+        <div class="note-content">
+            <strong>Karar Anı</strong>
+            Boş veriyi silmek kolaydır ama bilgi kaybıdır. Doldurmak risktir ama veriyi korur. Veri bilimcinin sanatı burada devreye girer.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 28: Pandas Yetenekleri -->
+<div class="slide-container">
+    <h2 class="slide-title">Pandas'ın Süper Güçleri</h2>
+    <div class="content-area">
+        <div class="grid-4">
+            <div class="card">
+                <i class="fa-solid fa-filter big-icon"></i>
+                <h3>Filtreleme</h3>
+                <p style="font-size:16px;"><code>df[df['Yas']>18]</code></p>
+                <p style="font-size:14px;">18 yaşından büyükleri getir.</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-layer-group big-icon"></i>
+                <h3>Gruplama</h3>
+                <p style="font-size:16px;"><code>df.groupby('Sehir')</code></p>
+                <p style="font-size:14px;">Şehirlere göre özet çıkar.</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-code-merge big-icon"></i>
+                <h3>Birleştirme</h3>
+                <p style="font-size:16px;"><code>merge, concat</code></p>
+                <p style="font-size:14px;">İki tabloyu birleştir (VLOOKUP).</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-sort big-icon"></i>
+                <h3>Sıralama</h3>
+                <p style="font-size:16px;"><code>sort_values</code></p>
+                <p style="font-size:14px;">Büyükten küçüğe diz.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">28 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <div class="note-content">
+            <strong>Neden Kullanılır?</strong>
+            Excel'de saatler süren "Pivot Table" veya "Düşeyara" işlemleri Pandas'ta tek satır kodla milisaniyeler sürer.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 29: Excel vs Pandas -->
+<div class="slide-container">
+    <h2 class="slide-title">Gerçek Hayat: Excel vs Pandas</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div class="card" style="border-color:#ef4444;">
+                <h3><i class="fa-solid fa-file-excel"></i> Excel Yaklaşımı</h3>
+                <ul style="text-align:left; font-size:18px;">
+                    <li>1. Dosyayı aç (5GB ise açılmaz!).</li>
+                    <li>2. Filtrele -> Kopyala -> Yapıştır.</li>
+                    <li>3. Formül yaz (=TOPLA...).</li>
+                    <li>4. Hata yapma riski yüksek.</li>
+                </ul>
+            </div>
+            <div class="card" style="border-color:#4ade80;">
+                <h3><i class="fa-brands fa-python"></i> Pandas Yaklaşımı</h3>
+                <ul style="text-align:left; font-size:18px;">
+                    <li>1. 5GB dosyayı parça parça okur.</li>
+                    <li>2. <code>df.groupby('A').sum()</code></li>
+                    <li>3. İnsan hatası yok.</li>
+                    <li>4. Otomatik çalışır.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">29 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-robot"></i>
+        <div class="note-content">
+            <strong>Otomasyon</strong>
+            Pandas'ın en büyük gücü otomasyondur. Her sabah yaptığınız Excel raporunu Pandas scriptine çevirip kahvenizi içerken bitmesini izleyebilirsiniz.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 30: Object Tehlikesi -->
+<div class="slide-container">
+    <h2 class="slide-title">Tehlike: 'Object' Veri Tipi</h2>
+    <div class="content-area">
+        <p>Eğer bir sütunda hem sayı (5) hem yazı ("5 TL") varsa, Pandas karar veremez ve tipini <strong>Object</strong> yapar.</p>
+        <div class="warning-box">
+            <strong>Neden Kötü?</strong>
+            <ul>
+                <li>Matematiksel işlem yapılamaz.</li>
+                <li>Bellekte çok yer kaplar.</li>
+                <li>Yavaş çalışır.</li>
+            </ul>
+        </div>
+        <p style="margin-top: 20px;"><strong>Çözüm:</strong> Veriyi temizleyip zorla sayıya çevirmek.</p>
+        <code>pd.to_numeric(df['sutun'], errors='coerce')</code>
+    </div>
+    <div class="slide-number">30 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <div class="note-content">
+            <strong>Kritik Uyarı</strong>
+            'Object' tipi, Pandas'ın "Ben bunun ne olduğunu tam anlamadım, genel bir kutuya attım" deme şeklidir. Analiz yapmadan önce mutlaka düzeltilmelidir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 31: CPU vs GPU -->
+<div class="slide-container">
+    <h2 class="slide-title"><i class="fa-solid fa-server"></i> Donanım: CPU vs GPU</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>CPU (Merkezi İşlemci)</h3>
+                <p><strong>Analoji:</strong> Bir Profesör.</p>
+                <p>Çok zekidir, en zor problemleri çözebilir ama hepsini sırayla tek tek yapar.</p>
+                <p><em>Standart Python kodları burada çalışır.</em></p>
+            </div>
+            <div>
+                <h3>GPU (Grafik İşlemci)</h3>
+                <p><strong>Analoji:</strong> 5000 İlkokul Öğrencisi.</p>
+                <p>Tek başlarına zeki değillerdir ama hepsi aynı anda "2+2" işlemini yapabilir.</p>
+                <p><em>Numpy matris çarpımları ve Derin Öğrenme burada çalışır.</em></p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">31 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-microchip"></i>
+        <div class="note-content">
+            <strong>Hangisi?</strong>
+            Eğer çok karmaşık mantık varsa (if/else) Profesör (CPU) iyidir. Eğer milyonlarca basit çarpma varsa Öğrenciler (GPU) iyidir.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 32: Özet (Numpy & Pandas) -->
+<div class="slide-container">
+    <h2 class="slide-title">Özet: Numpy ve Pandas Sinerjisi</h2>
+    <div class="content-area">
+        <p>Bu iki kütüphane bir elmanın iki yarısı gibidir.</p>
+        <div class="two-column">
+            <div class="card" style="border-left:5px solid #38bdf8; text-align:left;">
+                <h3 style="color:#38bdf8;">Pandas (Ön Büro)</h3>
+                <ul style="margin-top:10px; font-size:18px;">
+                    <li>Dosyayı (Excel, CSV) karşılar.</li>
+                    <li>Eksikleri, hataları düzeltir.</li>
+                    <li>Veriyi seçer ve gruplar.</li>
+                    <li><em>"Veriyi insana sunar."</em></li>
+                </ul>
+            </div>
+            <div class="card" style="border-left:5px solid #f472b6; text-align:left;">
+                <h3 style="color:#f472b6;">Numpy (Arka Mutfak)</h3>
+                <ul style="margin-top:10px; font-size:18px;">
+                    <li>Sayısal hesaplamayı yapar.</li>
+                    <li>Matris çarpımlarını yönetir.</li>
+                    <li>Hız optimizasyonu sağlar.</li>
+                    <li><em>"Veriyi makineye sunar."</em></li>
+                </ul>
+            </div>
+        </div>
+        <div class="math-block" style="margin-top:30px; font-size:24px;">
+            Ham Veri -> <strong>Pandas</strong> -> Temiz Veri -> <strong>Numpy</strong> -> Yapay Zeka Modeli
+        </div>
+    </div>
+    <div class="slide-number">32 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-handshake"></i>
+        <div class="note-content">
+            <strong>Ekip Çalışması</strong>
+            Pandas veriyi hazırlar, Numpy hesaplar. Biri olmadan diğerinin gücü eksik kalır. Veri bilimci her ikisini de aynı akıcılıkla kullanmalıdır.
+        </div>
+    </div>
+</div>
+
+<!-- Slide 33: Kapanış -->
+<div class="slide-container">
+    <div style="text-align: center; margin: auto;">
+        <h2 style="font-size: 60px; color: #4ade80;">Ders 2 Tamamlandı</h2>
+        <p style="margin-top: 30px;">Hedef: Veri tiplerini ve matris yapısını zihninizde canlandırmak.</p>
+        <div style="font-size: 80px; margin-top: 40px; color: #38bdf8;">
+            <i class="fa-solid fa-check-circle"></i>
+        </div>
+    </div>
+    <div class="slide-number">33 / 33</div>
+    <div class="instructor-note">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <div class="note-content">
+            <strong>Tebrikler!</strong>
+            Veri biliminin en sıkıcı ama en kritik kısmını kavradınız. Artık matrisler korkutucu değil, güçlü birer araç.
+        </div>
+    </div>
+</div>
+
+<!-- Navigasyon Kontrolleri -->
+<div class="controls">
+    <button class="nav-btn" id="prevBtn" onclick="prevSlide()" disabled>
+        <i class="fa-solid fa-arrow-left"></i> Geri
+    </button>
+    <div style="color: #64748b; font-family: 'JetBrains Mono';" id="slideCounter">1 / 33</div>
+    <button class="nav-btn" id="nextBtn" onclick="nextSlide()">
+        İleri <i class="fa-solid fa-arrow-right"></i>
+    </button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    const totalSlides = slides.length;
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const slideCounter = document.getElementById('slideCounter');
+
+    function updateSlide() {
+        // Tüm slaytları gizle
+        slides.forEach(slide => slide.classList.remove('active'));
+        
+        // Aktif olanı göster
+        slides[currentSlide].classList.add('active');
+        
+        // Buton durumları
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === totalSlides - 1;
+        
+        // Sayaç güncelle
+        slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updateSlide();
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateSlide();
+        }
+    }
+
+    // Klavye Desteği
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    // İlk yükleme
+    updateSlide();
+</script>
+
+</body>
+</html>
