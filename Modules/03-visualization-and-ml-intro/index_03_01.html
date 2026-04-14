@@ -1,1 +1,1103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Makine Öğrenmesinden Derin Öğrenmeye Yapay Zeka Uygulamaları</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+body {
+font-family: 'Plus Jakarta Sans', sans-serif;
+background-color: #f1f5f9;
+color: #0f172a;
+}
 
+.slide {
+display: none;
+animation: fadeIn 0.4s ease-out;
+height: 100%;
+}
+
+.slide.active {
+display: flex;
+flex-direction: column;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(8px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.progress-bar {
+height: 6px;
+background: #e2e8f0;
+width: 100%;
+position: fixed;
+top: 0;
+left: 0;
+z-index: 100;
+}
+
+.progress-inner {
+height: 100%;
+background: linear-gradient(90deg, #2563eb, #7c3aed);
+transition: width 0.3s ease;
+}
+
+.glass-card {
+background: rgba(255, 255, 255, 1);
+border: 1px solid rgba(226, 232, 240, 1);
+border-radius: 2.5rem;
+padding: 2rem;
+box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+flex-grow: 1;
+display: flex;
+flex-direction: column;
+overflow-y: auto;
+position: relative;
+}
+
+.summary-box {
+background: #f8fafc;
+border-left: 4px solid #3b82f6;
+padding: 1rem;
+margin-top: auto;
+border-radius: 0 0.75rem 0.75rem 0;
+}
+
+.box-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 15px;
+    flex-shrink: 0;
+}
+
+.analysis-box {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    color: #92400e;
+}
+
+.real-life-box {
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    color: #166534;
+}
+
+.term-highlight {
+font-weight: 800;
+color: #1e40af;
+background: #eff6ff;
+padding: 2px 6px;
+border-radius: 4px;
+}
+
+/* Classification Visual Styles */
+.scatter-plot {
+position: relative;
+width: 100%;
+height: 180px;
+background: #f1f5f9;
+border-radius: 12px;
+overflow: hidden;
+border: 1px solid #e2e8f0;
+}
+.dot {
+position: absolute;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+}
+.dot-red { background-color: #ef4444; }
+.dot-blue { background-color: #3b82f6; }
+.decision-line {
+position: absolute;
+width: 2px;
+height: 140%;
+background-color: #0f172a;
+top: -20%;
+left: 50%;
+transform: rotate(15deg);
+border-left: 2px dashed #0f172a;
+}
+
+#nav-controls {
+    position: fixed;
+    bottom: 15px;
+    right: 40px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+.nav-btn {
+    background: #0f172a;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    border: none;
+    font-size: 0.8rem;
+}
+
+#slide-counter {
+    position: fixed;
+    bottom: 25px;
+    left: 40px;
+    font-weight: 800;
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.vs-divider { position: relative; }
+.vs-divider::after {
+content: 'VS';
+position: absolute;
+top: 50%; left: 50%;
+transform: translate(-50%, -50%);
+background: #fff;
+padding: 0.5rem;
+border-radius: 50%;
+font-weight: 800;
+font-size: 0.75rem;
+color: #94a3b8;
+border: 1px solid #e2e8f0;
+}
+
+/* Dictionary Styling */
+.dict-page h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+}
+
+.dict-item {
+    margin-bottom: 1.25rem;
+}
+
+.dict-item strong {
+    display: block;
+    font-size: 0.95rem;
+    color: #0f172a;
+    margin-bottom: 2px;
+}
+
+.dict-item p {
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.dict-card {
+background: #fff;
+padding: 0.75rem;
+border-radius: 1rem;
+border: 1px solid #e2e8f0;
+margin-bottom: 0.5rem;
+}
+.dict-term { color: #1e40af; font-weight: 800; font-size: 0.9rem; display: block; margin-bottom: 2px; }
+.dict-desc { font-size: 0.75rem; color: #475569; line-height: 1.4; }
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+<div class="progress-bar">
+<div id="progress" class="progress-inner"></div>
+</div>
+
+<div class="max-w-6xl w-full glass-card rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[780px] flex flex-col relative border border-slate-200">
+<!-- Header -->
+<div class="px-10 pt-8 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center text-white shadow-lg">
+<i class="fa-brands fa-python"></i>
+</div>
+<div>
+<h4 class="font-bold text-slate-800 leading-tight text-sm">Python Makine Öğrenmesinden Derin Öğrenmeye</h4>
+<span class="text-[10px] text-blue-600 font-bold tracking-widest uppercase">3. Ders: Makine Öğrenmesine Giriş</span>
+</div>
+</div>
+<div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">v4.0 Expert Edition</div>
+</div>
+
+<!-- Slide Content Area -->
+<div id="slides-container" class="flex-grow px-10 py-6 flex flex-col overflow-y-auto">
+
+<!-- Slide 1 -->
+<div class="slide active">
+<div class="flex-grow flex flex-col items-center justify-center text-center">
+<div class="p-4 bg-blue-50 rounded-3xl mb-6"><i class="fa-solid fa-microchip text-6xl text-blue-600 animate-pulse"></i></div>
+<h1 class="text-5xl font-extrabold mb-4 text-slate-900 leading-tight">Makine Öğrenmesine Giriş<br><span class="text-blue-600 text-3xl">(Introduction to Machine Learning)</span></h1>
+<p class="text-lg text-slate-500 max-w-xl">İstatistik ve olasılığın veriyi nasıl kurala dönüştürdüğünü keşfedelim.</p>
+<div class="box-container text-left w-full">
+    <div class="analysis-box"><strong>Analiz:</strong> Makine öğrenmesi, kuralları makinenin yazdığı yeni bir programlama çağıdır.</div>
+    <div class="real-life-box"><strong>Gerçek Hayat:</strong> Netflix'in ne izleyeceğinizi bilmesi bir sihir değil, geçmiş verilerinizden türetilen bir kuraldır.</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 2 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-3xl font-bold mb-4 text-blue-800 border-b-2 pb-2">Yapay Zeka Tarihçesi ve Turing Testi</h2>
+        <h3 class="text-xl font-bold text-slate-700 mb-6">Turing Testi (1950)</h3>
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-4">
+                <p class="text-sm text-slate-600 leading-relaxed">Alan Turing, "Makineler düşünebilir mi?" sorusunu sorarak bilgisayar biliminin rotasını değiştirdi. Testin özü; bir insanın, karşısındakinin makine mi yoksa insan mı olduğunu ayırt edememesidir.</p>
+                <ul class="space-y-2 text-xs font-bold text-slate-700">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> 1950–70: Kural tabanlı (If-Else) sistemler.</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> 1980+: İstatistiksel öğrenmenin yükselişi.</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> 2010+: Büyük Veri ve Derin Öğrenme devrimi.</li>
+                </ul>
+            </div>
+            <div class="bg-blue-50 p-8 rounded-3xl text-center border-2 border-blue-100">
+                <i class="fa-solid fa-user-gear text-5xl text-blue-200 mb-4"></i>
+                <p class="text-sm italic text-blue-600 font-black">"ZEKA, TAKLİT İLE BAŞLAR."</p>
+            </div>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Turing'in vizyonu, bugünkü LLM (ChatGPT vb.) teknolojilerinin temel felsefesini oluşturur: "Gözlemlenebilir zeka".</div>
+            <div class="real-life-box"><strong>Sektörel Not:</strong> 80'li yıllarda kural yazıyorduk, şimdi o kuralları yazacak "kuralları" üretiyoruz.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-3xl font-bold mb-8 text-slate-800 border-b pb-2">Paradigma Değişimi: Kural mı, Veri mi?</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="p-6 bg-red-50 rounded-3xl border-2 border-red-100 shadow-sm">
+                <h4 class="font-black text-red-600 mb-4 uppercase text-sm">Eski Dünya: Kurallar</h4>
+                <p class="text-xs text-slate-600 mb-4">"Şöyle ise şöyle yap." İnsan kuralı yazar, bilgisayar sadece uygular. Karmaşık durumlarda kodlar yönetilemez hale gelir.</p>
+                <div class="p-3 bg-white rounded-xl font-mono text-[10px] text-slate-800 border">Input + Rules -> Results</div>
+            </div>
+            <div class="p-6 bg-green-50 rounded-3xl border-2 border-green-100 shadow-sm">
+                <h4 class="font-black text-green-600 mb-4 uppercase text-sm">Yeni Dünya: Veri</h4>
+                <p class="text-xs text-slate-600 mb-4">"Örnekleri gör ve kuralı sen bul." Kendi kuralını keşfeden sistem. Sınırsız olasılığa kendi kendine adapte olur.</p>
+                <div class="p-3 bg-white rounded-xl font-mono text-[10px] text-slate-800 border">Input + Results -> Rules (Model)</div>
+            </div>
+        </div>
+        <div class="p-4 bg-blue-50 rounded-2xl mt-6 border-l-8 border-blue-600 shadow-inner">
+            <p class="text-sm font-bold text-blue-900"><i class="fa-solid fa-fish mr-2"></i> Kritik Benzetme: Makineye balık vermiyoruz (hazır kural), ona veriden balık tutmayı (öğrenmeyi) öğretiyoruz.</p>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Dipnot:</strong> Geleneksel yazılım deterministiktir, Makine Öğrenmesi ise probabilistik (olasılıksal) bir yapıdadır.</div>
+            <div class="real-life-box"><strong>Önemli:</strong> Satranç gibi sonlu seçeneklerde kurallar işe yarar, ancak yüz tanıma gibi sonsuz varyasyonda ML tek çözümdür.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-3xl font-bold mb-10 text-slate-800 text-center">Öğrenme ve Tahmin Akışı</h2>
+        <div class="grid md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-white p-6 rounded-3xl border-2 border-slate-100 shadow-sm text-center">
+                <i class="fa-solid fa-database text-3xl text-slate-400 mb-4"></i>
+                <h4 class="font-black text-sm uppercase">Aşama 1</h4>
+                <p class="text-[10px] text-slate-500 font-bold uppercase">Geçmiş Veri & Cevaplar</p>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border-2 border-slate-100 shadow-sm text-center">
+                <i class="fa-solid fa-gears text-3xl text-blue-400 mb-4"></i>
+                <h4 class="font-black text-sm uppercase">Aşama 2</h4>
+                <p class="text-[10px] text-slate-500 font-bold uppercase">Model Oluşturma</p>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border-2 border-slate-100 shadow-sm text-center">
+                <i class="fa-solid fa-rocket text-3xl text-green-400 mb-4"></i>
+                <h4 class="font-black text-sm uppercase">Aşama 3</h4>
+                <p class="text-[10px] text-slate-500 font-bold uppercase">Tahmin & Çıktı</p>
+            </div>
+        </div>
+        <div class="p-6 bg-slate-50 rounded-2xl border-l-4 border-slate-300 mb-6">
+            <p class="text-xs text-slate-700 leading-relaxed font-bold italic"><strong>Özet:</strong> Makine sadece ezberlemez; verideki gizli desenleri (patterns) anlayarak, daha önce hiç karşılaşmadığı bir durumda ne yapacağına karar verme yetisi kazanır.</p>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Eğitmen Notu:</strong> Buna literatürde <span class="text-blue-600">Generalization</span> (Genelleme) yeteneği diyoruz. Sadece eğitim setini bilen model başarısızdır.</div>
+            <div class="real-life-box"><strong>Gerçek:</strong> Amazon'un size sunduğu "Bunu da sevebilirsiniz" önerisi tam olarak 3. aşamadaki tahmindir.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-3xl font-bold mb-8 text-orange-600 border-l-8 border-orange-500 pl-4 uppercase">İstatistik: Makinenin Ana Dili</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-200">
+                <h4 class="text-lg font-black text-slate-800 mb-4">Nedir & Neden?</h4>
+                <p class="text-xs text-slate-600 mb-4">İstatistik, veriden anlam çıkarma sanatıdır. ML algoritmaları aslında otomatikleştirilmiş <span class="text-blue-600 font-black">istatistiksel modellerdir</span>.</p>
+                <ul class="space-y-2 text-[10px] font-bold text-orange-700">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-minus"></i> Verideki gürültüyü (noise) temizler.</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-minus"></i> Değişkenler arası ilişkiyi ölçer.</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-minus"></i> Trendleri geleceğe taşır.</li>
+                </ul>
+            </div>
+            <div class="flex flex-col justify-center items-center text-center p-8 bg-white rounded-3xl">
+                <p class="text-xl italic font-serif text-slate-400 mb-2">"İstatistik, bilimin grameridir."</p>
+                <span class="text-xs font-bold text-slate-300">- Karl Pearson</span>
+            </div>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Makine öğrenmesi, klasik istatistiğin "büyük veri" ve "işlem gücü" ile evrimleşmiş halidir.</div>
+            <div class="real-life-box"><strong>Kritik:</strong> İstatistik olmasaydı, modelimiz verideki tesadüfleri (outliers) genel bir kural sanarak hata yapardı.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-3xl font-bold mb-8 text-cyan-700 border-l-8 border-cyan-500 pl-4 uppercase">Olasılık: Belirsizliğin Matematiği</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div>
+                    <h4 class="text-lg font-black text-slate-800 mb-2">Neden İhtiyaç Var?</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">Gerçek dünyada hiçbir şey %100 kesin değildir. Olasılık, makinenin yaptığı tahminin "ne kadar güvenilir" olduğunu bilmesini sağlar.</p>
+                </div>
+                <div class="p-4 bg-cyan-50 border border-cyan-100 rounded-2xl">
+                    <h5 class="text-xs font-black text-cyan-800 uppercase mb-1">Bayes Teoremi:</h5>
+                    <p class="text-[10px] text-cyan-900 italic">Yeni bir kanıt (veri) geldiğinde, mevcut inancımızı (tahminimizi) güncelleme yöntemidir. ML'in kalbidir.</p>
+                </div>
+            </div>
+            <div class="bg-[#0f172a] text-white p-8 rounded-[2rem] text-center shadow-xl flex flex-col justify-center">
+                <i class="fa-solid fa-cloud-showers-heavy text-4xl text-cyan-400 mb-4"></i>
+                <div class="text-5xl font-black mb-2">%78</div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Tahmin Güveni</p>
+                <p class="text-[10px] italic text-slate-300">"Makine 'yağmur yağacak' demez, 'yağma ihtimali daha yüksektir' der."</p>
+            </div>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> "Probability is the logic of uncertainty." Olasılık, makinenin "bilmiyorum" diyebilmesini de sağlar.</div>
+            <div class="real-life-box"><strong>Literatür:</strong> Pierre-Simon Laplace'ın belirttiği gibi, olasılık teorisi sağduyunun hesaba dökülmüş halidir.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-3xl font-bold mb-10 text-slate-800 border-l-8 border-slate-700 pl-4 uppercase">Veri Madenciliği (Data Mining)</h2>
+        <div class="grid grid-cols-3 gap-6 mb-10">
+            <div class="bg-white p-6 rounded-3xl border shadow-sm text-center flex flex-col items-center">
+                <i class="fa-solid fa-gem text-3xl text-orange-400 mb-4"></i>
+                <h4 class="font-black text-sm uppercase">Keşif</h4>
+                <p class="text-[9px] text-slate-500 font-bold uppercase mt-2">Gizli bilgiyi çıkarma.</p>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border shadow-sm text-center flex flex-col items-center">
+                <i class="fa-solid fa-filter text-3xl text-orange-500 mb-4"></i>
+                <h4 class="font-black text-sm uppercase">Ayıklama</h4>
+                <p class="text-[9px] text-slate-500 font-bold uppercase mt-2">Gürültüden arındırma.</p>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border shadow-sm text-center flex flex-col items-center">
+                <i class="fa-solid fa-lightbulb text-3xl text-orange-600 mb-4"></i>
+                <h4 class="font-black text-sm uppercase">Anlamlandırma</h4>
+                <p class="text-[9px] text-slate-500 font-bold uppercase mt-2">Bilgiye dönüştürme.</p>
+            </div>
+        </div>
+        <p class="text-sm font-bold text-slate-700 mb-6 px-4">Fark Nedir? Veri Madenciliği daha çok <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded">geçmişi anlamak</span> üzerinedir. Makine Öğrenmesi ise bu keşifleri kullanarak <span class="bg-blue-600 text-white px-2 py-1 rounded">geleceği tahmin etmeye</span> odaklanır.</p>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Sade Anlatım:</strong> Büyük bir kum yığınında altın parçacıkları (kıymetli veri) aramaktır.</div>
+            <div class="real-life-box"><strong>Dipnot:</strong> ML, madencinin bulduğu o altını nasıl işleyeceğini öğrenen bir fabrikadır.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 8 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-3xl font-bold mb-10 text-blue-900 border-l-8 border-blue-800 pl-4 uppercase">Yapay Zeka Hiyerarşisi</h2>
+        <div class="grid md:grid-cols-2 gap-8 items-center flex-grow">
+            <div class="relative w-full max-w-[260px] aspect-square mx-auto flex items-center justify-center">
+                <div class="absolute w-[260px] h-[260px] border-2 border-blue-100 rounded-full flex items-start justify-center pt-2">
+                    <span class="text-[11px] font-black text-blue-200 uppercase tracking-widest">Yapay Zeka (AI)</span>
+                </div>
+                <div class="absolute w-[180px] h-[180px] border-2 border-blue-300 rounded-full flex items-start justify-center pt-2">
+                    <span class="text-[11px] font-black text-blue-400 uppercase tracking-widest">Makine Öğrenmesi</span>
+                </div>
+                <div class="absolute w-[100px] h-[100px] bg-blue-600 rounded-full flex items-center justify-center shadow-xl">
+                    <span class="text-white text-xs font-black uppercase">Derin<br>Öğrenme</span>
+                </div>
+            </div>
+            <div class="space-y-3">
+                <div class="p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
+                    <h5 class="text-[11px] font-black text-blue-800 uppercase mb-1">AI (YAPAY ZEKA)</h5>
+                    <p class="text-[9px] text-slate-500 leading-tight">İnsan zekasını taklit eden her türlü sistem (Satranç motorları, if-else blokları dahil).</p>
+                </div>
+                <div class="p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
+                    <h5 class="text-[11px] font-black text-blue-800 uppercase mb-1">ML (MAKİNE ÖĞRENMESİ)</h5>
+                    <p class="text-[9px] text-slate-500 leading-tight">Veriden öğrenen, performansı zamanla artan algoritmalar.</p>
+                </div>
+                <div class="p-3 bg-blue-600 text-white rounded-xl shadow-md">
+                    <h5 class="text-[11px] font-black uppercase mb-1">DL (DERİN ÖĞRENME)</h5>
+                    <p class="text-[9px] opacity-90 leading-tight">Çok katmanlı yapay sinir ağları ile özellik çıkarımı yapan ML alt dalı.</p>
+                </div>
+            </div>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Anatomi:</strong> Her Derin Öğrenme bir Makine Öğrenmesidir, ancak her Makine Öğrenmesi Derin Öğrenme değildir.</div>
+            <div class="real-life-box"><strong>Kural:</strong> Basit bir Excel verisi için DL kullanmak "sineği öldürmek için balyoz kullanmaya" benzer.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 9 -->
+<div class="slide"><h2 class="text-2xl font-bold mb-8 text-slate-800">Makine Öğrenmesinin 3 Ana Türü</h2><div class="grid md:grid-cols-3 gap-6"><div class="p-6 bg-green-50 rounded-3xl border border-green-100"><h4 class="font-bold text-green-700 mb-2">1. Denetimli</h4><p class="text-[11px] text-green-800 uppercase font-black">Supervised</p><p class="text-[10px] mt-4 text-slate-600">Cevaplar (etiketler) mevcuttur. Öğretmen eşliğinde öğrenme.</p></div><div class="p-6 bg-amber-50 rounded-3xl border border-amber-100"><h4 class="font-bold text-amber-700 mb-2">2. Denetimsiz</h4><p class="text-[11px] text-amber-800 uppercase font-black">Unsupervised</p><p class="text-[10px] mt-4 text-slate-600">Cevap yok. Verinin içindeki yapıyı keşfetme.</p></div><div class="p-6 bg-red-50 rounded-3xl border border-red-100"><h4 class="font-bold text-red-700 mb-2">3. Pekiştirmeli</h4><p class="text-[11px] text-red-800 uppercase font-black">Reinforcement</p><p class="text-[10px] mt-4 text-slate-600">Deneme-yanılma ve ödül mekanizması ile öğrenme.</p></div></div><div class="summary-box mt-10"><p class="text-xs text-slate-600"><strong>Kriter:</strong> Hangi türü seçeceğimize, elimizdeki **verinin tipine** ve **çözmek istediğimiz probleme** göre karar veririz.</p></div></div>
+
+<!-- Slide 10 -->
+<div class="slide"><h2 class="text-2xl font-bold mb-6 text-green-700">Denetimli Öğrenme (Sınıflandırma & Regresyon)</h2><div class="grid md:grid-cols-2 gap-6"><div class="p-6 bg-white border border-green-100 rounded-2xl"><h5 class="font-bold text-sm mb-2">Sınıflandırma</h5><p class="text-[10px] text-slate-500">"Bu nedir?" sorusuna yanıt arar. Kediyi köpekten ayırmak, maili spam olarak işaretlemek.</p></div><div class="p-6 bg-white border border-green-100 rounded-2xl"><h5 class="font-bold text-sm mb-2">Regresyon</h5><p class="text-[10px] text-slate-500">"Ne kadar?" sorusuna yanıt arar. Ev fiyatı tahmini, hava sıcaklığı tahmini.</p></div></div><div class="summary-box mt-10"><p class="text-xs text-slate-600"><strong>Ayrım:</strong> Sınıflandırma gruplara ayırır (Kedi/Köpek), Regresyon sayısal bir değer üretir (150.000 TL).</p></div></div>
+
+<!-- Slide 11 -->
+<div class="slide"><h2 class="text-2xl font-bold mb-6 text-amber-700">Denetimsiz Öğrenme: Kümeleme (Clustering)</h2><div class="flex flex-col md:flex-row gap-8"><div class="md:w-1/2 space-y-4"><p class="text-sm text-slate-600 leading-relaxed">Verileri özelliklerine göre <strong>gruplandırır</strong>. Biz grupların adını söylemeyiz, makine benzerleri yan yana getirir.</p><div class="p-4 bg-amber-100 rounded-2xl text-[10px] font-bold text-amber-900">Örnek: Müşterileri "Sadıklar" ve "Yeni Gelenler" diye kendiliğinden ayırması.</div></div><div class="md:w-1/2 flex items-center justify-center p-6 bg-slate-50 rounded-3xl border border-slate-200"><div class="grid grid-cols-2 gap-2"><div class="w-8 h-8 bg-amber-500 rounded-full"></div><div class="w-8 h-8 bg-amber-500 rounded-full"></div><div class="w-8 h-8 bg-blue-500 rounded-lg"></div><div class="w-8 h-8 bg-blue-500 rounded-lg"></div></div></div></div><div class="summary-box mt-10"><p class="text-xs text-slate-600"><strong>Özet:</strong> Kümeleme, verinin içindeki doğal yapıyı ortaya çıkarır.</p></div></div>
+
+<!-- Slide 12 -->
+<div class="slide"><h2 class="text-2xl font-bold mb-6 text-amber-700">Denetimsiz Öğrenme: Boyut Azaltma</h2><div class="grid md:grid-cols-2 gap-8"><div class="space-y-4"><p class="text-sm text-slate-600 leading-relaxed">Verideki <strong>gereksiz gürültüyü</strong> temizler. 50 farklı özellikten sadece sonucu en çok etkileyen 5 tanesini seçer veya birleştirir.</p><div class="p-4 bg-slate-900 text-white rounded-2xl text-[10px]">Örnek: 4K bir resmi kalitesini bozmadan küçültmek gibi; verinin özünü tutup hacmini küçültmektir.</div></div><div class="flex items-center justify-center text-amber-600"><i class="fa-solid fa-compress text-6xl"></i></div></div><div class="summary-box mt-10"><p class="text-xs text-slate-600"><strong>Ayrım:</strong> Kümeleme verileri <strong>böler</strong>, Boyut Azaltma veriyi <strong>sadeleştirir</strong>.</p></div></div>
+
+<!-- Slide 13 -->
+<div class="slide"><h2 class="text-2xl font-bold mb-6 text-red-700">Pekiştirmeli Öğrenme (Deneme-Yanılma)</h2><div class="p-10 bg-red-50 rounded-3xl border border-red-100 text-center"><i class="fa-solid fa-gamepad text-5xl text-red-500 mb-6"></i><p class="text-sm text-red-900 italic">"Doğru hamlede ödül, yanlışta ceza. Tıpkı bir köpeği eğitmek veya bir oyun oynamak gibi."</p></div><div class="summary-box mt-10"><p class="text-xs text-slate-600"><strong>Özet:</strong> Bu yöntem otonom araçlarda ve oyun yapay zekalarında kullanılır.</p></div></div>
+
+<!-- Slide 14 -->
+<div class="slide"><h2 class="text-2xl font-bold mb-6 text-slate-800">Büyük Veri (30GB - 100GB+) ve Kırılma</h2><div class="p-6 bg-orange-50 rounded-3xl border border-orange-200"><p class="text-sm text-orange-900 leading-relaxed">Veri miktarı arttıkça klasik istatistiksel modellerin nefesi yetmemeye başladı. 100GB üzerine çıkan metin, görüntü ve ses dosyaları "Derin Öğrenme"ye geçişi zorunlu kıldı.</p></div><div class="summary-box mt-10"><p class="text-xs text-slate-600"><strong>Analiz:</strong> Klasik ML algoritması veri arttıkça bir yerden sonra daha fazla öğrenemez (Doygunluk).</p></div></div>
+
+<!-- Slide 15 -->
+<div class="slide"><h2 class="text-2xl font-bold mb-6 text-indigo-700">Neden Derin Öğrenme?</h2><div class="grid md:grid-cols-2 gap-4 text-center"><div class="p-6 bg-white border rounded-2xl shadow-sm"><i class="fa-solid fa-eye text-2xl text-blue-500 mb-2"></i><h5 class="text-xs font-bold">Görüntü İşleme</h5></div><div class="p-6 bg-white border rounded-2xl shadow-sm"><i class="fa-solid fa-microphone-lines text-2xl text-purple-500 mb-2"></i><h5 class="text-xs font-bold">Ses Analizi</h5></div></div><div class="summary-box mt-10"><p class="text-xs text-slate-600"><strong>Kritik:</strong> Derin Öğrenme, karmaşık verilerin özelliklerini kendisi bulur.</p></div></div>
+
+<!-- Slide 16 -->
+<div class="slide">
+    <div class="glass-card">
+        <div class="text-[10px] font-bold text-blue-600 mb-2 uppercase tracking-widest">v4.0 Expert Edition</div>
+        <h2 class="text-3xl font-bold mb-4 text-slate-800 border-b-2 pb-2">Bölüm 1 Özeti: Veriden Akla Yolculuk</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-4">
+                <p class="text-sm leading-relaxed text-slate-600">İlk bölümde, bilgisayarların sadece "kuralları uygulayan" makinelerden, "kuralları keşfeden" akıllı sistemlere dönüşümünü inceledik. Temel yapı taşımız <strong>Veri</strong>, rehberimiz ise <strong>İstatistik</strong>tir.</p>
+                <div class="grid grid-cols-2 gap-2 text-[10px] font-bold uppercase tracking-tighter">
+                    <div class="p-3 bg-blue-50 rounded-xl border border-blue-100"><i class="fa-solid fa-code text-blue-500 mr-2"></i>Kodlama vs ML</div>
+                    <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100"><i class="fa-solid fa-layer-group text-indigo-500 mr-2"></i>AI, ML ve DL</div>
+                    <div class="p-3 bg-green-50 rounded-xl border border-green-100"><i class="fa-solid fa-calculator text-green-500 mr-2"></i>Veri + İstatistik</div>
+                    <div class="p-3 bg-purple-50 rounded-xl border border-purple-100"><i class="fa-solid fa-brain text-purple-500 mr-2"></i>Akıl</div>
+                </div>
+            </div>
+            <div class="bg-slate-900 p-8 rounded-[3rem] text-center shadow-2xl border-4 border-slate-800 relative overflow-hidden">
+                <i class="fa-solid fa-quote-left absolute top-4 left-4 text-4xl opacity-10"></i>
+                <p class="text-xs text-white italic leading-relaxed z-10 relative">"Makine öğrenmesi, tecrübeyi matematiksel modele dönüştürme sanatıdır."</p>
+            </div>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Makine öğrenmesi süreci doğrusal değil, döngüseldir. Daha fazla veri, daha iyi istatistiksel model demektir.</div>
+            <div class="real-life-box"><strong>Gerçek Hayat:</strong> Bebeklerin konuşmayı öğrenirken gramer kuralı ezberlememesi, sadece duydukları binlerce kelime arasındaki ilişkiyi (veriyi) istatistiksel olarak kavraması ML'in en doğal örneğidir.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 17 -->
+<div class="slide">
+    <div class="glass-card flex items-center justify-center text-center">
+        <div class="w-24 h-24 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white text-3xl mb-6 shadow-xl animate-pulse">
+            <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <h2 class="text-4xl font-extrabold mb-4 text-slate-800 uppercase tracking-tighter">Bölüm 2: Teknik Derinleşme</h2>
+        <p class="text-lg text-slate-500">Öznitelikler, Sınıflar ve Algoritmalar</p>
+    </div>
+</div>
+
+<!-- Slide 18 -->
+<div class="slide">
+<h2 class="text-2xl font-bold mb-6 text-green-700">Denetimli Öğrenme Mantığı</h2>
+<div class="glass-card">
+<div class="flex flex-col gap-6 items-center">
+<div class="flex gap-4 items-center justify-center w-full">
+<div class="p-4 bg-white border border-slate-300 rounded-2xl text-center w-1/3 shadow-sm">
+<i class="fa-solid fa-x-ray text-4xl text-slate-700 mb-2"></i>
+<div class="text-xs font-bold uppercase tracking-widest">Girdi (X)</div>
+<div class="text-[10px] text-slate-400 italic font-bold">Röntgen Filmi</div>
+</div>
+<i class="fa-solid fa-plus text-slate-300 text-2xl"></i>
+<div class="p-4 bg-white border border-green-300 rounded-2xl text-center w-1/3 shadow-sm relative">
+<div class="absolute -top-3 -right-3 bg-green-500 text-white text-[10px] px-2 py-1 rounded-full font-bold shadow-lg">UZMAN</div>
+<i class="fa-solid fa-tag text-4xl text-green-600 mb-2"></i>
+<div class="text-xs font-bold text-green-700 uppercase tracking-widest">Etiket (Y)</div>
+<div class="text-[10px] text-slate-400 font-bold uppercase">"Hasta"</div>
+</div>
+</div>
+<i class="fa-solid fa-arrow-down text-2xl text-blue-600 animate-bounce"></i>
+<div class="p-6 bg-slate-800 text-white rounded-3xl w-full text-center shadow-xl border-b-8 border-blue-600">
+<i class="fa-solid fa-robot text-2xl mb-2"></i>
+<h4 class="font-bold">MODEL EĞİTİMİ</h4>
+<p class="text-xs text-slate-400 italic font-medium">Makine: "Görüntüdeki desenlerin 'Hasta' etiketiyle olan istatistiksel bağını öğrendim."</p>
+</div>
+</div>
+<div class="box-container mt-auto">
+<div class="analysis-box"><strong>Analiz:</strong> Bu yöntemde makineye hem soruyu hem cevabı (etiketi) gösteririz. Uzman denetimi esastır.</div>
+<div class="real-life-box"><strong>Gerçek Hayat:</strong> Bir doktorun 1000 filmi ayırıp makineye "cevap anahtarı" sunması ile teşhis başarısının artması.</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 19 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-2xl font-bold mb-8 text-slate-800 border-b pb-2">ML'in Temeli: Ayrık vs Sürekli Veri</h2>
+        <div class="grid md:grid-cols-2 gap-8 h-full">
+            <div class="p-8 bg-purple-50 rounded-3xl border-2 border-purple-100 shadow-sm relative">
+                <i class="fa-solid fa-stairs absolute top-6 right-8 text-4xl text-purple-200"></i>
+                <h4 class="font-bold text-purple-800 mb-4 uppercase">Ayrık (Discrete)</h4>
+                <p class="text-xs text-slate-600 mb-6 font-medium">Net basamaklar gibidir. Ara değer yoktur. (Spam/Normal, 1 Elma, 2 Elma...)</p>
+                <div class="p-3 bg-white/50 rounded-xl font-bold text-purple-900 text-xs text-center border uppercase">Sınıflandırma (Classification)</div>
+            </div>
+            <div class="p-8 bg-indigo-50 rounded-3xl border-2 border-indigo-100 shadow-sm relative">
+                <i class="fa-solid fa-chart-line absolute top-6 right-8 text-4xl text-indigo-200"></i>
+                <h4 class="font-bold text-indigo-800 mb-4 uppercase">Sürekli (Continuous)</h4>
+                <p class="text-xs text-slate-600 mb-6 font-medium">Bir rampa/yokuş gibidir. Sonsuz ara değer alabilir. (Fiyat, Sıcaklık, Araba KM...)</p>
+                <div class="p-3 bg-white/50 rounded-xl font-bold text-indigo-900 text-xs text-center border uppercase">Regresyon (Regression)</div>
+            </div>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Veri tipini doğru belirlemek, problemi hangi algoritmayla çözeceğinizi belirleyen ilk adımdır.</div>
+            <div class="real-life-box"><strong>Gerçek Hayat:</strong> Ayakkabı numarası (38, 39) ayrıktır; ancak ayak uzunluğu (24.32 cm) süreklidir.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 20 -->
+<div class="slide">
+<h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-2 uppercase tracking-widest">Girdiden Tahmine ML Süreci</h2>
+<div class="glass-card">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4 p-4 bg-white border rounded-xl shadow-sm border-l-8 border-slate-300">
+<div class="font-black text-2xl text-slate-300">01</div>
+<div><h5 class="font-bold text-sm uppercase">Girdi (Raw Data)</h5><p class="text-xs text-slate-500 font-medium">Ham verilerin toplanması (Örn. Akciğer Filmi).</p></div>
+<i class="fa-solid fa-database ml-auto text-slate-200"></i>
+</div>
+<div class="flex items-center gap-4 p-4 bg-white border border-green-200 rounded-xl shadow-sm border-l-8 border-green-500">
+<div class="font-black text-2xl text-green-200">02</div>
+<div><h5 class="font-bold text-sm text-green-800 uppercase">Etiketleme (Labeling)</h5><p class="text-xs text-slate-500 font-medium">Uzman tanısının sisteme işlenmesi (Cevap anahtarı).</p></div>
+<i class="fa-solid fa-user-doctor ml-auto text-green-200"></i>
+</div>
+ <div class="flex items-center gap-4 p-4 bg-white border border-blue-200 rounded-xl shadow-sm border-l-8 border-blue-500">
+<div class="font-black text-2xl text-blue-200">03</div>
+<div><h5 class="font-bold text-sm text-blue-800 uppercase">Eğitim (Training)</h5><p class="text-xs text-slate-500 font-medium">Algoritmanın verideki gizli matematiksel kuralı çözmesi.</p></div>
+<i class="fa-solid fa-microchip ml-auto text-blue-200"></i>
+</div>
+ <div class="flex items-center gap-4 p-4 bg-slate-900 text-white rounded-xl shadow-lg border-l-8 border-purple-500">
+<div class="font-black text-2xl text-slate-600">04</div>
+<div><h5 class="font-bold text-sm uppercase">Tahmin (Prediction)</h5><p class="text-xs text-slate-400 font-medium">Yeni bir filme modelin doktora sormadan tanı koyması.</p></div>
+<i class="fa-solid fa-wand-magic-sparkles ml-auto text-purple-400"></i>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 21 -->
+<div class="slide">
+<h2 class="text-2xl font-bold mb-6 text-slate-800">Veri Anatomisi: Feature ve Label</h2>
+<div class="glass-card">
+<div class="grid md:grid-cols-2 gap-10 items-center">
+    <div class="bg-slate-50 p-8 rounded-[3rem] border shadow-inner">
+        <p class="text-[10px] font-black text-slate-400 mb-4 uppercase tracking-widest text-center">// Fındık Veri Seti (Pandas Dataframe)</p>
+        <table class="w-full text-left bg-white rounded-2xl overflow-hidden shadow-sm">
+            <thead class="bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-wider">
+                <tr><th class="p-4 border-r">Boyut (mm) - X</th><th class="p-4 border-r">Yağ - X</th><th class="p-4 text-red-600">Şehir - Y</th></tr>
+            </thead>
+            <tbody class="text-xs font-bold text-slate-700">
+                <tr class="border-b"><td class="p-4 border-r">18</td><td class="p-4 border-r">%60</td><td class="p-4 text-blue-700 uppercase">Giresun</td></tr>
+                <tr class="border-b"><td class="p-4 border-r">22</td><td class="p-4 border-r">%45</td><td class="p-4 text-blue-700 uppercase">Siirt</td></tr>
+                <tr><td class="p-4 border-r">20</td><td class="p-4 border-r">%55</td><td class="p-4 text-blue-700 uppercase">Trabzon</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="space-y-6">
+        <div class="p-5 bg-white border-l-8 border-blue-500 rounded-xl shadow-sm hover:translate-x-2 transition-transform">
+            <h4 class="font-black text-blue-900 text-sm mb-2 uppercase">X -> Features (Öznitelikler)</h4>
+            <p class="text-xs text-slate-500 leading-relaxed font-medium italic">Karar verdirici ipuçlarıdır (Boyut, Yağ Oranı, Metrekare).</p>
+        </div>
+        <div class="p-5 bg-white border-l-8 border-red-500 rounded-xl shadow-sm hover:translate-x-2 transition-transform">
+            <h4 class="font-black text-red-900 text-sm mb-2 uppercase">Y -> Labels (Etiket/Hedef)</h4>
+            <p class="text-xs text-slate-500 leading-relaxed font-medium italic">Tahmin edilmeye çalışılan asıl sonuç sütunu (Şehir, Fiyat).</p>
+        </div>
+    </div>
+</div>
+<div class="box-container mt-auto">
+    <div class="analysis-box"><strong>Analiz:</strong> Makine, X sütunlarındaki özellikleri kullanarak Y sonucunu bulmaya çalışır.</div>
+    <div class="real-life-box"><strong>Gerçek Hayat:</strong> Fındığın çapına ve yağ oranına bakarak hangi şehre ait olduğunu tahmin eden akıllı paketleme sistemleri.</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 22 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-2xl font-bold mb-6 text-slate-800">X ve Y Arasındaki İlişki</h2>
+        <div class="p-10 bg-white border-2 border-slate-100 rounded-[3rem] shadow-sm text-center mb-8">
+            <div class="text-4xl font-mono text-slate-800 mb-2">y = f(x)</div>
+            <div class="text-xs text-slate-400 font-bold uppercase tracking-widest">Matematiksel Fonksiyon</div>
+        </div>
+        <p class="text-sm text-slate-600 text-center mb-10 italic">"Makine öğrenmesinin tek amacı, <strong>X girdilerini Y çıktısına dönüştüren</strong> o gizli fonksiyonu (kuralı) bulmaktır."</p>
+        <div class="flex items-center justify-center gap-8">
+            <div class="p-6 bg-slate-50 border rounded-2xl text-center shadow-sm w-48">
+                <span class="text-[10px] font-black text-slate-400 uppercase">GİRDİ (X)</span>
+                <h4 class="font-bold text-slate-800 mt-2">Evin Özellikleri</h4>
+            </div>
+            <i class="fa-solid fa-arrow-right text-slate-300 text-2xl"></i>
+            <div class="p-6 bg-green-50 border border-green-200 rounded-2xl text-center shadow-sm w-48">
+                <span class="text-[10px] font-black text-green-400 uppercase">ÇIKTI (Y)</span>
+                <h4 class="font-bold text-green-700 mt-2">Evin Fiyatı</h4>
+            </div>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Algoritma, X ile Y arasındaki bu matematiksel bağı çözdüğünde artık tahmin yapabilir hale gelir.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 23 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-2xl font-bold mb-6 text-slate-800">Eğitim ve Test Seti</h2>
+        <p class="text-sm text-slate-500 mb-8 italic">Elimizdeki 1000 verinin hepsini makineye verirsek, makine ezber yapar (Overfitting). Bu yüzden veriyi böleriz.</p>
+        <div class="w-full flex h-16 rounded-2xl overflow-hidden shadow-lg border-4 border-white mb-10">
+            <div class="bg-blue-600 flex items-center justify-center text-white text-xs font-black uppercase tracking-widest" style="width: 80%;">EĞİTİM SETİ (%80)</div>
+            <div class="bg-green-500 flex items-center justify-center text-white text-xs font-black uppercase tracking-widest" style="width: 20%;">TEST (%20)</div>
+        </div>
+        <div class="p-6 bg-blue-50 border-l-8 border-blue-500 rounded-r-3xl relative">
+            <p class="text-xs text-blue-900 leading-relaxed font-medium"><strong>Mantık:</strong> Sınavda soracağımız soruları (Test), derste çözdüğümüz sorulardan (Eğitim) ayrı tutmalıyız ki öğrencinin gerçekten öğrenip öğrenmediğini anlayalım.</p>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Test seti, modelin hiç görmediği veridir ve başarının gerçek ölçütüdür.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 24 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-2xl font-bold mb-8 text-slate-800">Ezber vs Öğrenme</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="p-8 bg-red-50 border border-red-100 rounded-[3rem] shadow-sm">
+                <h4 class="font-black text-red-600 text-sm mb-4 uppercase">Ezber (Overfitting)</h4>
+                <p class="text-xs text-slate-600 leading-relaxed italic">"Tüm soruları ve cevapları gören öğrenci, sınavda 100 alır ama konuyu bilmez. Soru biraz değişirse çuvallar."</p>
+            </div>
+            <div class="p-8 bg-green-50 border border-green-100 rounded-[3rem] shadow-sm">
+                <h4 class="font-black text-green-600 text-sm mb-4 uppercase">Gerçek Öğrenme</h4>
+                <p class="text-xs text-slate-600 leading-relaxed italic">"Sadece mantığı öğrenen öğrenci, hiç görmediği bir soruyla (Test verisi) karşılaşsa bile onu çözebilir."</p>
+            </div>
+        </div>
+        <div class="summary-box mt-10">
+            <p class="text-xs text-slate-600 font-bold">ML'in Amacı: Veriyi ezberlemek değil, verinin altındaki genel mantığı (genelleştirmeyi) öğrenmektir.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 25 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-4xl font-extrabold mb-4 text-purple-700 uppercase tracking-tighter">Sınıflandırma (Classification)</h2>
+        <p class="text-sm text-slate-500 mb-8 italic">Denetimli öğrenmenin bir alt dalıdır. <strong>Ayrık Veriler (Discrete Data)</strong> ile çalışır.</p>
+        <div class="p-10 bg-purple-50 rounded-[3.5rem] border-2 border-purple-100 text-center mb-8 relative overflow-hidden">
+            <i class="fa-solid fa-question absolute -right-4 -top-4 text-8xl text-purple-100 rotate-12"></i>
+            <h4 class="text-xl font-bold text-purple-900 mb-6 relative z-10">Soru: "Bu Hangisi?"</h4>
+            <div class="flex flex-wrap justify-center gap-3 relative z-10">
+                <span class="px-6 py-2 bg-white border border-purple-200 rounded-full text-[10px] font-black text-purple-600 shadow-sm uppercase">Kedi mi, Köpek mi?</span>
+                <span class="px-6 py-2 bg-white border border-purple-200 rounded-full text-[10px] font-black text-purple-600 shadow-sm uppercase">Spam mi, Değil mi?</span>
+                <span class="px-6 py-2 bg-white border border-purple-200 rounded-full text-[10px] font-black text-purple-600 shadow-sm uppercase">Hasta mı, Sağlıklı mı?</span>
+            </div>
+        </div>
+        <div class="p-6 bg-slate-50 rounded-2xl border-l-8 border-slate-300">
+            <p class="text-xs text-slate-600 font-bold">Cevaplar net kategorilerdir. Ara değer yoktur (Yarım kedi diye bir şey yoktur).</p>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Sınıflandırma, her veriyi önceden belirlenmiş bir "kutunun" içine koyma işlemidir.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 26 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-2xl font-bold mb-6 text-purple-700">Sınıflandırma: Karar Sınırı (Visual)</h2>
+        <div class="flex flex-col gap-6">
+            <p class="text-xs text-slate-600 leading-relaxed font-medium italic">"Model, farklı sınıfları birbirinden ayıran en iyi matematiksel <span class="term-highlight">Sınır Çizgisini (Decision Boundary)</span> çizmeyi öğrenir."</p>
+            <div class="scatter-plot shadow-md border-2 border-slate-200">
+                <div class="dot dot-red shadow" style="bottom: 20%; left: 20%;"></div>
+                <div class="dot dot-red shadow" style="bottom: 35%; left: 15%;"></div>
+                <div class="dot dot-red shadow" style="bottom: 10%; left: 30%;"></div>
+                <div class="dot dot-blue shadow" style="top: 20%; right: 20%;"></div>
+                <div class="dot dot-blue shadow" style="top: 35%; right: 15%;"></div>
+                <div class="dot dot-blue shadow" style="top: 50%; right: 25%;"></div>
+                <div class="decision-line"></div>
+                <div class="absolute bottom-2 left-6 text-[10px] text-red-600 font-bold bg-white/80 px-2 rounded-full border shadow-sm">SINIF A (SPAM)</div>
+                <div class="absolute top-2 right-6 text-[10px] text-blue-600 font-bold bg-white/80 px-2 rounded-full border shadow-sm">SINIF B (GÜVENLİ)</div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-3 bg-purple-50 rounded-2xl text-center border"><i class="fa-solid fa-tags text-purple-500 mb-1"></i><h6 class="text-[9px] font-bold uppercase">Ayrık Gruplar</h6></div>
+                <div class="p-3 bg-purple-50 rounded-2xl text-center border"><i class="fa-solid fa-bullseye text-purple-500 mb-1"></i><h6 class="text-[9px] font-bold uppercase">Net Teşhis</h6></div>
+            </div>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Sınıflandırmada ara değer yoktur; nesne ya A'dır ya da B.</div>
+            <div class="real-life-box"><strong>Gerçek Hayat:</strong> Gelen e-postanın 'Spam' olup olmadığına karar veren akıllı filtreler.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 27 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-2xl font-bold mb-4 text-slate-800 uppercase tracking-widest text-center border-b pb-2">Sınıflandırma Algoritmaları</h2>
+        <div class="grid grid-cols-1 gap-2 overflow-y-auto pr-2">
+            <div class="p-3 bg-blue-600 text-white rounded-xl flex items-center gap-4 shadow-lg border-2 border-white/20">
+                <i class="fa-solid fa-tree text-2xl"></i>
+                <div><h5 class="font-bold text-xs uppercase tracking-widest">Random Forest</h5><p class="text-[9px] opacity-90 italic font-medium">Yüzlerce karar ağacının "oy çokluğuyla" en doğru sonucu belirlediği dev bir topluluk zekasıdır.</p></div>
+            </div>
+            <div class="p-3 border rounded-xl bg-white flex items-center gap-4 shadow-sm border-l-4 border-l-indigo-500">
+                <i class="fa-solid fa-filter text-indigo-500 text-xl"></i>
+                <div><h5 class="font-bold text-xs text-indigo-900">Naive Bayes</h5><p class="text-[9px] text-slate-500 font-medium">Olasılık temellidir, metin analizi ve spam tespitinde inanılmaz hızlıdır.</p></div>
+            </div>
+            <div class="p-3 border rounded-xl bg-white flex items-center gap-4 shadow-sm border-l-4 border-l-indigo-500">
+                <i class="fa-solid fa-chart-line text-indigo-500 text-xl"></i>
+                <div><h5 class="font-bold text-xs text-indigo-900">Logistic Regression</h5><p class="text-[9px] text-slate-500 font-medium">0-1 arası olasılık tahmini çıkararak ayrık sınıflandırma gerçekleştirir.</p></div>
+            </div>
+        </div>
+        <div class="p-6 bg-blue-50 border-l-8 border-blue-600 rounded-r-3xl mt-4 relative shadow-inner">
+            <i class="fa-solid fa-quote-left absolute top-2 right-4 text-4xl opacity-10"></i>
+            <p class="text-[11px] italic font-bold text-blue-900 leading-relaxed italic">"KNN, SVM, Decision Tree, Random Forest… Hangisi iyi? Bu veriye göre değişir; her problem kendi algoritmasını seçer."</p>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Algoritma seçimi "Deneme-Yanılma" ve "Başarı Skorları" (Metrics) ile yapılır.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 28: Regresyon Örneği (GÜNCELLENDİ) -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-2xl font-bold mb-6 text-indigo-800 border-b pb-2 uppercase tracking-tighter">Regresyon Örneği</h2>
+        <div class="grid md:grid-cols-2 gap-8 items-center h-full">
+            <div class="p-4 bg-white border-2 border-slate-200 rounded-[2rem] shadow-inner h-full flex flex-col justify-center">
+                <svg viewBox="0 0 400 300" class="w-full h-full">
+                    <!-- Grid Lines -->
+                    <line x1="40" y1="20" x2="40" y2="260" stroke="#f1f5f9" stroke-width="1" />
+                    <line x1="40" y1="260" x2="380" y2="260" stroke="#f1f5f9" stroke-width="1" />
+                    <path d="M40 260 L40 20 M40 260 L380 260" stroke="#cbd5e1" stroke-width="2" fill="none"/>
+                    
+                    <!-- 20+ Realistic Scatter Points -->
+                    <circle cx="60" cy="240" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="75" cy="225" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="85" cy="235" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="100" cy="205" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="115" cy="215" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="130" cy="190" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="145" cy="175" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="160" cy="185" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="180" cy="160" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="195" cy="150" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="210" cy="165" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="225" cy="140" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="240" cy="125" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="255" cy="135" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="270" cy="110" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="285" cy="95" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="300" cy="105" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="315" cy="80" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="330" cy="65" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="345" cy="75" r="3.5" fill="#ef4444" opacity="0.8" />
+                    <circle cx="360" cy="50" r="3.5" fill="#ef4444" opacity="0.8" />
+
+                    <!-- Best Fit Line -->
+                    <line x1="40" y1="250" x2="370" y2="40" stroke="#1e40af" stroke-width="3" />
+                </svg>
+                <div class="flex justify-center gap-4 mt-2">
+                    <div class="flex items-center gap-2 text-[9px] font-bold"><span class="w-2 h-2 bg-red-500 rounded-sm"></span> Veri Noktaları</div>
+                    <div class="flex items-center gap-2 text-[9px] font-bold"><span class="w-4 h-[2px] bg-blue-800"></span> Tahmin Doğrusu</div>
+                </div>
+            </div>
+            <div class="p-6 bg-slate-900 text-white rounded-[2rem] shadow-2xl relative overflow-hidden h-full flex flex-col justify-center">
+                <i class="fa-solid fa-arrow-trend-up absolute -right-6 -bottom-6 text-[100px] opacity-10"></i>
+                <p class="text-sm leading-relaxed mb-6 font-bold italic z-10 relative">"Gerçek hayattaki veri noktaları arasındaki trendi yakalayan en iyi matematiksel doğruyu bulma işlemidir."</p>
+                <div class="p-4 bg-white/10 rounded-xl border border-white/10 z-10 relative">
+                    <h5 class="text-xs text-blue-400 font-black uppercase mb-2">Analiz Çıktısı</h5>
+                    <p class="text-[10px] leading-tight opacity-90 italic">Model, X girdisi arttıkça Y çıktısının ne oranda artacağını bu çizgi üzerindeki koordinatlara göre tahmin eder.</p>
+                </div>
+            </div>
+        </div>
+        <div class="box-container mt-auto">
+            <div class="analysis-box"><strong>Analiz:</strong> Zaman serisi verilerinde regresyon "Gelecekte nerede olacağız?" sorusunun yanıtıdır.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 29 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-2xl font-bold mb-8 text-slate-800 text-center uppercase tracking-widest">Sınıflandırma vs Regresyon</h2>
+        <div class="grid grid-cols-3 gap-4 text-center items-stretch h-full mb-6">
+            <div class="col-span-1 flex flex-col justify-center gap-4">
+                 <div class="p-4 bg-slate-100 rounded-xl font-bold text-slate-500 text-xs uppercase">Özellik</div>
+                 <div class="p-4 bg-purple-100 rounded-xl font-bold text-purple-900 text-xs uppercase h-full flex items-center justify-center">Sınıflandırma</div>
+                 <div class="p-4 bg-indigo-100 rounded-xl font-bold text-indigo-900 text-xs uppercase h-full flex items-center justify-center">Regresyon</div>
+            </div>
+            <div class="col-span-2 grid grid-cols-1 gap-4">
+                 <div class="grid grid-cols-2 gap-4">
+                     <div class="p-4 bg-white border rounded-xl text-[10px] font-bold text-slate-600">Hedef Çıktı</div>
+                     <div class="p-4 bg-white border rounded-xl text-[10px] font-bold text-slate-600">Örnek Soru</div>
+                 </div>
+                 <div class="grid grid-cols-2 gap-4 h-full">
+                     <div class="p-4 bg-purple-50 border border-purple-200 rounded-xl text-[10px] text-purple-800 h-full flex items-center justify-center font-medium">Ayrık Kategori (Kedi/Köpek)</div>
+                     <div class="p-4 bg-purple-50 border border-purple-200 rounded-xl text-[10px] text-purple-800 h-full flex items-center justify-center font-bold italic">Resimdeki kişi kim?</div>
+                 </div>
+                 <div class="grid grid-cols-2 gap-4 h-full">
+                     <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-[10px] text-indigo-800 h-full flex items-center justify-center font-medium">Sürekli Sayı (Fiyat/Sıcaklık)</div>
+                     <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-[10px] text-indigo-800 h-full flex items-center justify-center font-bold italic">Yarın hava kaç derece?</div>
+                 </div>
+            </div>
+        </div>
+        <div class="summary-box mt-auto"><strong>Kriter:</strong> Çıktınızın tipi problemin hangi kategoriye girdiğini belirler.</div>
+    </div>
+</div>
+
+<!-- Slide 30 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-4xl font-extrabold mb-4 text-[#d97706] uppercase tracking-tighter">2. DENETİMSİZ ÖĞRENME (UNSUPERVISED)</h2>
+        <p class="text-sm text-slate-500 mb-8 italic font-medium">Bu yöntemde makineye ne bulması gerektiğini söylemeyiz; sadece veriyi veririz.</p>
+        <div class="bg-amber-50/50 rounded-[2.5rem] p-12 border-2 border-amber-100/50 mb-8 flex items-center justify-around relative">
+            <div class="flex flex-col items-center gap-3">
+                <div class="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-amber-100"><i class="fa-solid fa-layer-group text-3xl text-amber-500"></i></div>
+                <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">HAM VERİ</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="px-6 py-2 bg-[#d97706] text-white text-[10px] font-bold rounded-full shadow-lg">ETİKETSİZ VERİ</div>
+                <i class="fa-solid fa-arrow-right text-amber-400 text-2xl"></i>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-amber-100"><i class="fa-solid fa-wand-magic-sparkles text-3xl text-amber-500"></i></div>
+                <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">GİZLİ ÖRÜNTÜ</span>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="p-6 bg-[#0f172a] text-white rounded-2xl text-center shadow-xl">
+                <h4 class="text-sm font-bold text-amber-400 uppercase tracking-widest mb-1">KÜMELEME</h4>
+                <p class="text-[10px] opacity-80">Benzer verileri gruplara ayırır.</p>
+            </div>
+            <div class="p-6 bg-[#0f172a] text-white rounded-2xl text-center shadow-xl">
+                <h4 class="text-sm font-bold text-blue-400 uppercase tracking-widest mb-1">BOYUT AZALTMA</h4>
+                <p class="text-[10px] opacity-80">Karmaşık veriyi sadeleştirir.</p>
+            </div>
+        </div>
+        <div class="p-5 bg-amber-50 border-l-4 border-amber-500 rounded-r-xl">
+            <p class="text-[11px] text-amber-900 leading-relaxed"><strong>Analiz:</strong> "Etiketsiz Veri" olması, makinenin insan yardımı olmadan (y-hedef olmadan) verideki doğal matematiksel kümeleri bulması demektir.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slides 31-34 -->
+<div class="slide"><h2 class="text-2xl font-bold mb-6 text-amber-700 border-b pb-2">1. Kümeleme (Clustering)</h2><div class="p-8 bg-amber-50 rounded-3xl border-2 border-amber-100 shadow-inner"><p class="text-sm text-slate-700 leading-relaxed font-bold italic mb-6">"Benzerleri yan yana getir, grupları sen oluştur."</p><div class="flex justify-center gap-10 items-center"><div class="text-center p-4 bg-white rounded-2xl shadow-sm"><i class="fa-solid fa-users text-3xl text-slate-400 mb-2"></i><p class="text-[9px] font-bold text-slate-500 uppercase">Karmaşık Müşteriler</p></div><i class="fa-solid fa-arrow-right text-amber-400 text-xl"></i><div class="text-center p-4 bg-white rounded-2xl shadow-sm border border-amber-200"><div class="flex gap-2 justify-center mb-2"><i class="fa-solid fa-user text-amber-600"></i><i class="fa-solid fa-user text-blue-600"></i><i class="fa-solid fa-user text-green-600"></i></div><p class="text-[9px] font-bold text-amber-600 uppercase">Segmentlere Ayrılmış</p></div></div></div><div class="box-container mt-auto"><div class="analysis-box"><strong>Analiz:</strong> Denetimsizdir çünkü grupların adını biz vermeyiz, makine matematiksel yakınlığa göre ayırır.</div><div class="real-life-box"><strong>Gerçek Hayat:</strong> Spotify'ın müzik zevkinize benzeyen milyonlarca kullanıcıyı aynı listeye koyması.</div></div></div>
+<div class="slide"><h2 class="text-2xl font-bold mb-6 text-amber-800 uppercase tracking-widest text-center border-b pb-2">2. Boyut Azaltma (Dimensionality Reduction)</h2><div class="p-10 bg-slate-900 text-white rounded-[3rem] shadow-xl relative overflow-hidden mb-6"><i class="fa-solid fa-compress absolute -right-6 top-1/2 -translate-y-1/2 text-9xl opacity-10"></i><p class="text-xs font-bold italic mb-4 text-amber-400 uppercase tracking-[0.2em]">"Veriyi Sıkıştır, Özünü Kaybetme"</p><p class="text-[11px] opacity-80 leading-relaxed">Binlerce özellik içeren verilerde gereksiz detayları atıp, veriyi en iyi temsil eden az sayıda özelliği bulma işlemidir.</p></div><div class="grid grid-cols-2 gap-4 text-center mt-auto"><div class="p-4 bg-slate-100 rounded-xl"><h5 class="font-bold text-xs text-slate-800 mb-1">Görselleştirme</h5><p class="text-[9px] text-slate-500">Çok boyutlu veriyi indirgemek.</p></div><div class="p-4 bg-slate-100 rounded-xl"><h5 class="font-bold text-xs text-slate-800 mb-1">Hızlanma</h5><p class="text-[9px] text-slate-500">Gereksiz yükü atmak.</p></div></div></div>
+<div class="slide"><h2 class="text-3xl font-bold mb-6 text-red-600 uppercase tracking-widest border-b-2 border-red-100 pb-2">3. Pekiştirmeli Öğrenme (Reinforcement Learning)</h2><div class="flex flex-col gap-6"><div class="w-full h-48 bg-red-50 rounded-3xl border-2 border-red-200 overflow-hidden relative"><img src="https://placehold.co/600x200/fef2f2/991b1b?text=Ajan+ve+Ortam+Döngüsü" alt="Döngü" class="object-cover w-full h-full opacity-90"><div class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/90 px-4 py-1 rounded-full text-[9px] font-bold text-red-800 shadow uppercase">Döngü: Aksiyon -> Ödül/Ceza</div></div><div class="grid grid-cols-2 gap-4 text-center"><div class="p-4 bg-white border border-red-100 rounded-2xl shadow-sm"><i class="fa-solid fa-robot text-2xl text-red-500 mb-2"></i><h5 class="text-xs font-bold text-slate-800">Ajan (Agent)</h5><p class="text-[9px] text-slate-500">Öğrenen robot/yazılım.</p></div><div class="p-4 bg-white border border-red-100 rounded-2xl shadow-sm"><i class="fa-solid fa-star text-2xl text-yellow-500 mb-2"></i><h5 class="text-xs font-bold text-slate-800">Ödül (Reward)</h5><p class="text-[9px] text-slate-500">Doğru hareketin puanı.</p></div></div></div><div class="box-container mt-auto"><div class="analysis-box"><strong>Analiz:</strong> Bebeklerin yürümeyi öğrenmesi gibidir. Düşer (Ceza), kalkar ve adım atar (Ödül).</div></div></div>
+<div class="slide"><h2 class="text-2xl font-bold mb-6 text-red-700 border-b pb-2">Gerçek Hayat Örneği: Otonom Robotlar</h2><div class="grid md:grid-cols-2 gap-8 items-center h-full"><div class="p-8 bg-slate-900 text-white rounded-[3rem] shadow-2xl relative overflow-hidden h-full flex flex-col justify-center"><i class="fa-solid fa-chess-board absolute -right-6 -bottom-6 text-9xl opacity-10"></i><h4 class="text-xl font-bold mb-2 text-red-400">AlphaGo & Satranç</h4><p class="text-xs leading-relaxed opacity-80">Google'ın yapay zekası, kazanma ödülünden öğrendi.</p></div><div class="space-y-4"><div class="p-5 bg-white border-l-4 border-red-500 rounded-r-xl shadow-sm"><h5 class="text-xs font-bold text-slate-800 mb-1">Robot Süpürgeler</h5><p class="text-[10px] text-slate-600">Duvara çarparsa (ceza) açık alanda ilerlerse (ödül).</p></div></div></div></div>
+
+<!-- Slide 35: Süreç Yönetimi (GÜNCELLENDİ) -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-3xl font-bold mb-10 text-slate-800 text-center uppercase tracking-tighter">MAKİNE ÖĞRENMESİ PİPELİNE (SÜREÇ YÖNETİMİ)</h2>
+        <div class="grid grid-cols-6 gap-3 mb-12 items-center">
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-full aspect-video bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center shadow-sm"><i class="fa-solid fa-database text-blue-600"></i></div>
+                <span class="text-[7px] font-black text-slate-500 text-center uppercase">1. VERİ TOPLAMA</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-full aspect-video bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center shadow-sm"><i class="fa-solid fa-broom text-blue-600"></i></div>
+                <span class="text-[7px] font-black text-slate-500 text-center uppercase">2. VERİ TEMİZLEME</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-full aspect-video bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center shadow-sm"><i class="fa-solid fa-flask-vial text-blue-600"></i></div>
+                <span class="text-[7px] font-black text-slate-500 text-center uppercase">3. MODEL SEÇİMİ</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-full aspect-video bg-blue-600 rounded-xl flex items-center justify-center shadow-lg"><i class="fa-solid fa-dumbbell text-white"></i></div>
+                <span class="text-[7px] font-black text-blue-600 text-center uppercase">4. EĞİTİM & TEST</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-full aspect-video bg-indigo-100 border-2 border-indigo-300 rounded-xl flex items-center justify-center shadow-sm"><i class="fa-solid fa-chart-line text-indigo-700"></i></div>
+                <span class="text-[7px] font-black text-indigo-700 text-center uppercase">5. BAŞARI ÖLÇÜMÜ</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-full aspect-video bg-green-500 border border-green-300 rounded-xl flex items-center justify-center shadow-lg"><i class="fa-solid fa-rocket text-white"></i></div>
+                <span class="text-[7px] font-black text-green-700 text-center uppercase">6. CANLIYA ALMA</span>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mt-auto">
+            <div class="p-5 bg-amber-50 border-l-4 border-amber-500 rounded-r-xl">
+                <p class="text-[10px] text-amber-900 leading-relaxed font-medium"><strong>Kritik Analiz:</strong> Model başarısı algoritmadan çok 2. adımdaki (Temizleme) veri kalitesine bağlıdır. "Çöp girerse, çöp çıkar" prensibi geçerlidir.</p>
+            </div>
+            <div class="p-5 bg-green-50 border-l-4 border-green-500 rounded-r-xl">
+                <p class="text-[10px] text-green-900 leading-relaxed font-medium"><strong>Önemli:</strong> Bir veri bilimcinin vaktinin %80'i kod yazmakla değil, veriyi modele hazır hale getirmekle geçer.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 36 -->
+<div class="slide">
+    <div class="glass-card">
+        <h2 class="text-3xl font-bold mb-8 text-slate-800 text-center uppercase tracking-widest border-b pb-4">MODEL PERFORMANSI: SKORLAR</h2>
+        <div class="grid grid-cols-2 gap-8 mb-8 flex-grow items-center">
+            <div class="p-10 bg-[#f0fdf4] rounded-[3rem] border-2 border-green-100 text-center shadow-lg relative overflow-hidden h-full flex flex-col justify-center">
+                <div class="absolute top-4 right-8 opacity-10 text-6xl text-green-500"><i class="fa-solid fa-bullseye"></i></div>
+                <h4 class="text-xl font-black text-[#166534] mb-4 uppercase tracking-tighter">DOĞRULUK (ACCURACY)</h4>
+                <div class="text-6xl font-black text-slate-800 mb-2">%98.5</div>
+                <p class="text-xs text-slate-500 italic font-bold">"Ne kadar doğru bildim?"</p>
+                <p class="text-[10px] text-[#166534] font-black uppercase mt-4">Yüksek olması iyidir.</p>
+            </div>
+            <div class="p-10 bg-[#fef2f2] rounded-[3rem] border-2 border-red-100 text-center shadow-lg relative overflow-hidden h-full flex flex-col justify-center">
+                <div class="absolute top-4 right-8 opacity-10 text-6xl text-red-500"><i class="fa-solid fa-chart-line rotate-180 scale-y-[-1]"></i></div>
+                <h4 class="text-xl font-black text-[#991b1b] mb-4 uppercase tracking-tighter">HATA/KAYIP (LOSS)</h4>
+                <div class="text-6xl font-black text-slate-800 mb-2">0.02</div>
+                <p class="text-xs text-slate-500 italic font-bold">"Ne kadar yanıldım?"</p>
+                <p class="text-[10px] text-[#991b1b] font-black uppercase mt-4">Düşük olması (Sıfıra yakın) iyidir.</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-xl"><p class="text-[10px] text-amber-900 leading-relaxed font-medium"><strong>Analiz:</strong> Eğitim sırasında Loss azalmalı, Accuracy artmalıdır. Eğer Loss azalmıyorsa model öğrenemiyor demektir.</p></div>
+            <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-xl"><p class="text-[10px] text-green-900 leading-relaxed font-medium"><strong>Gerçek Hayat:</strong> Okçulukta hedefi vurmak (Accuracy) ve merkeze olan uzaklık (Loss).</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 37 -->
+<div class="slide dict-page">
+    <div class="glass-card">
+        <h3>Teknik Sözlük (A-F)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div class="dict-item"><strong>Accuracy (Doğruluk)</strong><p>Modelin toplam veri içinde ne kadar doğru tahmin yaptığı.</p></div>
+            <div class="dict-item"><strong>Algorithm (Algoritma)</strong><p>Veriden öğrenmeyi sağlayan matematiksel yöntem (Örn: KNN, SVM).</p></div>
+            <div class="dict-item"><strong>Artificial Intelligence (Yapay Zeka)</strong><p>İnsan zekasını taklit eden sistemlerin genel adı.</p></div>
+            <div class="dict-item"><strong>Classification (Sınıflandırma)</strong><p>Veriyi kategorilere (Kedi/Köpek) ayırma işlemi.</p></div>
+            <div class="dict-item"><strong>Clustering (Kümeleme)</strong><p>Benzer verileri gruplama (Denetimsiz öğrenme).</p></div>
+            <div class="dict-item"><strong>Continuous Data (Sürekli Veri)</strong><p>Sonsuz ara değer alabilen sayısal veri (Sıcaklık, Fiyat).</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 38 -->
+<div class="slide dict-page">
+    <div class="glass-card">
+        <h3>Teknik Sözlük (D-H)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div class="dict-item"><strong>Data Mining (Veri Madenciliği)</strong><p>Büyük veriden anlamlı desenler çıkarma süreci.</p></div>
+            <div class="dict-item"><strong>Deep Learning (Derin Öğrenme)</strong><p>Yapay sinir ağlarını kullanan gelişmiş ML alt dalı.</p></div>
+            <div class="dict-item"><strong>Discrete Data (Ayrık Veri)</strong><p>Sayılabilir, kategorik veri (Ayakkabı no, Spam/Normal).</p></div>
+            <div class="dict-item"><strong>Decision Tree (Karar Ağacı)</strong><p>Soru sorarak karar veren algoritma yapısı.</p></div>
+            <div class="dict-item"><strong>Feature (Öznitelik/Girdi)</strong><p>Tahmin için kullanılan özellikler (X sütunu).</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 39 -->
+<div class="slide dict-page">
+    <div class="glass-card">
+        <h3>Teknik Sözlük (I-M)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div class="dict-item"><strong>Input (Girdi)</strong><p>Modele verilen ham veri.</p></div>
+            <div class="dict-item"><strong>Label (Etiket/Hedef)</strong><p>Tahmin edilmesi istenen sonuç (Y sütunu).</p></div>
+            <div class="dict-item"><strong>Loss (Hata)</strong><p>Tahmin ile gerçek değer arasındaki fark.</p></div>
+            <div class="dict-item"><strong>Machine Learning (Makine Öğrenmesi)</strong><p>Veriden öğrenen algoritmalar bütünü.</p></div>
+            <div class="dict-item"><strong>Model</strong><p>Eğitim sonucu ortaya çıkan kural seti.</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 40 -->
+<div class="slide dict-page">
+    <div class="glass-card">
+        <h3>Teknik Sözlük (N-R)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div class="dict-item"><strong>Neural Networks (Sinir Ağları)</strong><p>İnsan beynini taklit eden katmanlı yapı.</p></div>
+            <div class="dict-item"><strong>Overfitting (Aşırı Öğrenme)</strong><p>Modelin veriyi ezberlemesi ve genelleme yapamaması.</p></div>
+            <div class="dict-item"><strong>Prediction (Tahmin)</strong><p>Modelin yeni veriye verdiği çıktı.</p></div>
+            <div class="dict-item"><strong>Regression (Regresyon)</strong><p>Sayısal değer tahmini yapma işlemi.</p></div>
+            <div class="dict-item"><strong>Reinforcement Learning (Pekiştirmeli)</strong><p>Ödül/Ceza ile öğrenme yöntemi.</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 41 -->
+<div class="slide dict-page">
+    <div class="glass-card">
+        <h3>Teknik Sözlük (S-T)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div class="dict-item"><strong>Supervised Learning (Denetimli)</strong><p>Etiketli verilerle yapılan öğrenme.</p></div>
+            <div class="dict-item"><strong>Support Vector Machine (SVM)</strong><p>Sınıfları ayıran en iyi sınırı bulan algoritma.</p></div>
+            <div class="dict-item"><strong>Test Set (Test Verisi)</strong><p>Modelin başarısını ölçmek için ayrılan veri (%20).</p></div>
+            <div class="dict-item"><strong>Training Set (Eğitim Verisi)</strong><p>Modelin öğrenmesi için kullanılan veri (%80).</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 42 -->
+<div class="slide dict-page">
+    <div class="glass-card">
+        <h3>Teknik Sözlük (U-Z)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div class="dict-item"><strong>Underfitting (Eksik Öğrenme)</strong><p>Modelin verideki ilişkiyi öğrenememesi durumu.</p></div>
+            <div class="dict-item"><strong>Unsupervised Learning (Denetimsiz)</strong><p>Etiketsiz verilerle yapılan öğrenme.</p></div>
+            <div class="dict-item"><strong>Validation (Doğrulama)</strong><p>Eğitim sırasında modelin ara kontrolü.</p></div>
+            <div class="dict-item"><strong>X (Features)</strong><p>Bağımsız değişkenler, girdiler.</p></div>
+            <div class="dict-item"><strong>Y (Target)</strong><p>Bağımlı değişken, çıktı.</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 43 -->
+<div class="slide"><div class="glass-card"><h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-2 uppercase tracking-widest">Kritik Kısaltmalar</h2><div class="grid grid-cols-2 gap-4"><div class="dict-card shadow-sm"><span class="dict-term">ML</span><span class="dict-desc">Machine Learning</span></div><div class="dict-card shadow-sm"><span class="dict-term">AI</span><span class="dict-desc">Artificial Intelligence</span></div><div class="dict-card shadow-sm"><span class="dict-term">DL</span><span class="dict-desc">Deep Learning</span></div><div class="dict-card shadow-sm"><span class="dict-term">KNN</span><span class="dict-desc">K-Nearest Neighbors</span></div></div></div></div>
+
+<!-- Slide 44 -->
+<div class="slide"><div class="glass-card"><h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-2 uppercase tracking-widest">Gelecek Derste</h2><div class="p-10 bg-indigo-600 text-white rounded-[3.5rem] shadow-2xl text-center"><i class="fa-solid fa-code text-5xl mb-6"></i><h4 class="text-2xl font-bold mb-4">Python ile İlk Modelimizi Eğitiyoruz</h4><p class="text-sm opacity-80">Scikit-learn kütüphanesine giriş ve canlı kodlama.</p></div></div></div>
+
+<!-- Slide 45 -->
+<div class="slide"><div class="glass-card flex items-center justify-center text-center"><div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-5xl mb-8 shadow-xl animate-bounce border-4 border-white"><i class="fa-solid fa-check-double"></i></div><h2 class="text-5xl font-black text-slate-900 leading-tight tracking-tighter uppercase">TEBRİKLER!</h2><p class="text-lg text-slate-500 mt-4 max-w-xl font-medium">Uzman bir temelle girdiniz.</p><div class="mt-12 flex gap-4"><span class="px-8 py-3 bg-blue-600 text-white rounded-full font-black text-xs shadow-lg uppercase tracking-widest">Modül 03 Bitti</span></div></div></div>
+
+</div>
+
+<!-- NAVIGATION CONTROLS -->
+<div id="slide-counter">SAYFA 01 / 45</div>
+<div id="nav-controls">
+<button class="nav-btn" onclick="prevSlide()" id="prev-btn">GERİ</button>
+<button class="nav-btn" onclick="nextSlide()" id="next-btn">İLERİ</button>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const progress = document.getElementById('progress');
+const counter = document.getElementById('slide-counter');
+const totalSlides = slides.length;
+
+function updateSlide() {
+    slides.forEach((s, i) => { if(s) s.classList.toggle('active', i === currentSlide); });
+    const percent = ((currentSlide + 1) / totalSlides) * 100;
+    progress.style.width = percent + '%';
+    counter.innerText = `SAYFA ${(currentSlide + 1).toString().padStart(2, '0')} / ${totalSlides}`;
+    document.getElementById('prev-btn').disabled = currentSlide === 0;
+    document.getElementById('next-btn').innerText = (currentSlide === totalSlides - 1) ? 'BAŞA DÖN' : 'İLERİ';
+}
+
+function nextSlide() { currentSlide = (currentSlide + 1) % totalSlides; updateSlide(); }
+function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
+document.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === ' ') nextSlide(); if (e.key === 'ArrowLeft') prevSlide(); });
+updateSlide();
+</script>
+</body>
+</html>
